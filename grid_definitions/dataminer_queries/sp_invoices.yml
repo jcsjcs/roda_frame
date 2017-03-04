@@ -1,0 +1,364 @@
+---
+:caption: Service provider invoices
+:sql: "SELECT service_provider_invoices.financial_year, parties_roles.party_name AS
+  service_provider,\r\ncurrencies.currency_code, service_provider_invoices.total_amount,
+  service_provider_invoices.service_provider_ref,\r\nservice_provider_invoices.for_default_costs,
+  service_provider_invoices.completed,\r\nservice_provider_invoices.approved, service_provider_invoices.needs_cost_re_allocation,\r\nservice_provider_invoices.status,
+  service_provider_invoices.invoice_date, service_provider_invoices.period,\r\nservice_provider_invoices.deviates_from_document,\r\nEXISTS(SELECT
+  id FROM service_provider_invoice_items WHERE service_provider_invoice_id = service_provider_invoices.id
+  AND has_missing_accountsales) AS has_missing_accountsales,\r\nservice_provider_invoices.reason_for_deviation,
+  service_provider_invoices.edi_file_name,\r\nservice_provider_invoices.approved_by,\r\nservice_provider_invoices.notes,
+  service_provider_invoices.id\r\nFROM service_provider_invoices\r\nJOIN currencies
+  ON currencies.id = service_provider_invoices.currency_id\r\nJOIN service_providers
+  ON service_providers.id = service_provider_invoices.service_provider_id\r\nJOIN
+  parties_roles ON parties_roles.id = service_providers.parties_role_id\r\nORDER BY
+  service_provider_invoices.id DESC\r\n"
+:limit: 
+:offset: 
+:columns:
+  financial_year:
+    :name: financial_year
+    :sequence_no: 1
+    :caption: Year
+    :namespaced_name: service_provider_invoices.financial_year
+    :data_type: :integer
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: 'true'
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  service_provider:
+    :name: service_provider
+    :sequence_no: 2
+    :caption: Service provider
+    :namespaced_name: parties_roles.party_name
+    :data_type: :string
+    :width: 200
+    :format: 
+    :hide: false
+    :groupable: 'true'
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  currency_code:
+    :name: currency_code
+    :sequence_no: 3
+    :caption: Currency
+    :namespaced_name: currencies.currency_code
+    :data_type: :string
+    :width: 100
+    :format: 
+    :hide: false
+    :groupable: 'true'
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  total_amount:
+    :name: total_amount
+    :sequence_no: 4
+    :caption: Total amount
+    :namespaced_name: service_provider_invoices.total_amount
+    :data_type: :number
+    :width: 100
+    :format: :delimited_1000
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: 'true'
+    :group_avg: undefined
+    :group_min: false
+    :group_max: undefined
+  service_provider_ref:
+    :name: service_provider_ref
+    :sequence_no: 5
+    :caption: Service provider ref
+    :namespaced_name: service_provider_invoices.service_provider_ref
+    :data_type: :string
+    :width: 150
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  for_default_costs:
+    :name: for_default_costs
+    :sequence_no: 6
+    :caption: Def. cost
+    :namespaced_name: service_provider_invoices.for_default_costs
+    :data_type: :boolean
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: 'true'
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  completed:
+    :name: completed
+    :sequence_no: 7
+    :caption: Completed
+    :namespaced_name: service_provider_invoices.completed
+    :data_type: :boolean
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: 'true'
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  approved:
+    :name: approved
+    :sequence_no: 8
+    :caption: Approved
+    :namespaced_name: service_provider_invoices.approved
+    :data_type: :boolean
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: 'true'
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  needs_cost_re_allocation:
+    :name: needs_cost_re_allocation
+    :sequence_no: 9
+    :caption: Need re-alloc
+    :namespaced_name: service_provider_invoices.needs_cost_re_allocation
+    :data_type: :boolean
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: 'true'
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  status:
+    :name: status
+    :sequence_no: 10
+    :caption: Status
+    :namespaced_name: service_provider_invoices.status
+    :data_type: :string
+    :width: 200
+    :format: 
+    :hide: false
+    :groupable: 'true'
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  invoice_date:
+    :name: invoice_date
+    :sequence_no: 11
+    :caption: Invoice date
+    :namespaced_name: service_provider_invoices.invoice_date
+    :data_type: :date
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  period:
+    :name: period
+    :sequence_no: 12
+    :caption: Period
+    :namespaced_name: service_provider_invoices.period
+    :data_type: :integer
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: 'true'
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  deviates_from_document:
+    :name: deviates_from_document
+    :sequence_no: 13
+    :caption: Deviates
+    :namespaced_name: service_provider_invoices.deviates_from_document
+    :data_type: :boolean
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: 'true'
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  has_missing_accountsales:
+    :name: has_missing_accountsales
+    :sequence_no: 14
+    :caption: Accsale missing
+    :namespaced_name: 
+    :data_type: :boolean
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: 'true'
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  reason_for_deviation:
+    :name: reason_for_deviation
+    :sequence_no: 15
+    :caption: Reason
+    :namespaced_name: service_provider_invoices.reason_for_deviation
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  edi_file_name:
+    :name: edi_file_name
+    :sequence_no: 16
+    :caption: Edi file name
+    :namespaced_name: service_provider_invoices.edi_file_name
+    :data_type: :string
+    :width: 300
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  approved_by:
+    :name: approved_by
+    :sequence_no: 17
+    :caption: Approved by
+    :namespaced_name: service_provider_invoices.approved_by
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  notes:
+    :name: notes
+    :sequence_no: 18
+    :caption: Notes
+    :namespaced_name: service_provider_invoices.notes
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  id:
+    :name: id
+    :sequence_no: 19
+    :caption: Id
+    :namespaced_name: service_provider_invoices.id
+    :data_type: :integer
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+:query_parameter_definitions:
+- :column: service_provider_invoices.service_provider_ref
+  :caption: Service provider ref
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: service_provider_invoices.invoice_date
+  :caption: Invoice date
+  :data_type: :date
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: service_provider_invoices.status
+  :caption: Status
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: service_provider_invoices.financial_year
+  :caption: Financial year
+  :data_type: :integer
+  :control_type: :list
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: SELECT year_seq FROM vw_year_list LIMIT 2
+- :column: currencies.currency_code
+  :caption: Currency code
+  :data_type: :string
+  :control_type: :list
+  :default_value: 
+  :ordered_list: 46
+  :ui_priority: 1
+  :list_def: SELECT DISTINCT currency_code FROM currencies ORDER BY currency_code
+- :column: parties_roles.party_name
+  :caption: Service Provider
+  :data_type: :string
+  :control_type: :list
+  :default_value: 
+  :ordered_list: 46
+  :ui_priority: 1
+  :list_def: SELECT DISTINCT party_name FROM parties_roles ORDER BY party_name
+- :column: service_provider_invoices.for_default_costs
+  :caption: Default cost / Invoice
+  :data_type: :boolean
+  :control_type: :list
+  :default_value: 
+  :ordered_list: false
+  :ui_priority: 1
+  :list_def:
+  - - DC
+    - true
+  - - Inv
+    - false

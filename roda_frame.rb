@@ -1,0 +1,173 @@
+# TODO: Get robocop in from the start....
+require 'roda'
+require 'awesome_print'
+require 'rom'
+require 'rom-sql'
+require 'rom-repository'
+require 'crossbeams/layout'
+require 'crossbeams/dataminer'
+require 'yaml'
+#require 'pry'
+
+Dir['./helpers/**/*.rb'].each { |f| require f }
+# Dir['./persistence/**/*.rb'].each { |f| require f }
+# Dir['./persistence/**/*.rb'].each { |f| puts f }
+require './repositories/user_repo'
+require './repositories/supplier_invoice_repo'
+require './repositories/warehouse/book_repo' # pretend warehouse repo.
+require './lib/db_connections'
+require './lib/dataminer_control'
+# require './models'
+
+
+DB = DBConnections.new
+# DB.base.use_logger(Logger.new($stdout)) # This will log SQL to console.
+
+# Make dry-container
+# add ROM container
+# Make auto-inject
+# include auto-inject in app
+# call ROM via the inject...
+
+class RodaFrame < Roda
+  include CommonHelpers
+
+  SOME_CONSTANT = 1
+
+  # use SomeMiddleware
+
+  plugin :render
+  plugin :assets, css: 'style.scss'#, js: 'behave.js'
+  plugin :public # serve assets from public folder.
+  plugin :view_subdirs
+  plugin :multi_route
+  plugin :content_for, :append=>true
+  plugin :indifferent_params
+  Dir['./routes/*.rb'].each { |f| require f }
+
+  # TODO: route for dataminer.
+  # MyApp.run(DB.db) # for sharing connection...
+
+  route do |r|
+    r.assets unless ENV['RACK_ENV'] == 'production'
+    r.public
+    r.root do
+      # 'At the Root' # If not logged-in, redirect to login?
+      # Relations::Users.new.first.inspect
+      # ROM.env.relations[:users].inspect
+      # ROM.methods.inspect
+      # r.redirect 'login/'
+      # s = DB.base['select * from users limit 2'].to_a.inspect
+      # s << DB.base['select * from users order by id desc limit 2'].to_a.inspect
+      # s << '<p>---</p>'
+      # s << DB.base(:warehouse)['select * from books'].to_a.inspect
+      user_repo = UserRepo.new(DB.db)
+      s = user_repo.query('id > 164').to_a.map { |a| a.class.name }.inspect
+      book_repo = BookRepo.new(DB.db)
+      supplier_invoice_repo = SupplierInvoiceRepo.new(DB.db)
+      s << '<p>---</p>'
+      s << supplier_invoice_repo.query('id < 3').first.pallet_filter.inspect
+      s << '<br>'
+      s << "<p>FILTER: #{supplier_invoice_repo.query('id < 3').first.pallet_filter.class.name}</p>"
+      s << supplier_invoice_repo.query('id < 3').first.status.class.name
+      s << '<p>---</p>'
+      s << book_repo.query('id < 3').to_a.map { |b| b.title }.inspect
+      s << '<p>---</p>'
+      s << user_repo.count_them[:count].to_s #.to_a.inspect
+      s
+    end
+    r.multi_route
+    r.is 'test' do
+      view('test_view')
+    end
+
+    # TEST Grid:
+    r.is 'grid' do
+      #view('grid')
+      #locals[:crossbeams_layout].build do |page|
+      #
+      book = Struct.new(:title, :author, :id).new('Book name', 'John J', 12)
+      @layout = Crossbeams::Layout::Page.new form_object: book, name: 'book'
+
+      @layout.build do |page|
+        page.add_grid('grd1', '/grid_data', caption: 'Test grid')
+      end
+
+      view('crossbeams_layout_page')
+    end
+    r.is 'grid_data' do
+      response['Content-Type'] = 'application/json'
+      #'TODO: return json rows for grid'
+      col_defs = []
+      row_defs = []
+      hs                  = {headerName: 'Name', field: 'name'}
+      col_defs << hs
+      # hs[:width]          = col.width unless col.width.nil?
+      # hs[:enableValue]    = true if [:integer, :number].include?(col.data_type)
+      # hs[:enableRowGroup] = true unless hs[:enableValue] && !col.groupable
+      # hs[:enablePivot]    = true unless hs[:enableValue] && !col.groupable
+      # if [:integer, :number].include?(col.data_type)
+      #   hs[:cellClass] = 'grid-number-column'
+      #   hs[:width]     = 100 if col.width.nil? && col.data_type == :integer
+      #   hs[:width]     = 120 if col.width.nil? && col.data_type == :number
+      # end
+      # if col.format == :delimited_1000
+      #   hs[:cellRenderer] = 'crossbeamsGridFormatters.numberWithCommas2'
+      # end
+      # if col.format == :delimited_1000_4
+      #   hs[:cellRenderer] = 'crossbeamsGridFormatters.numberWithCommas4'
+      # end
+      # if col.data_type == :boolean
+      #   hs[:cellRenderer] = 'crossbeamsGridFormatters.booleanFormatter'
+      #   hs[:cellClass]    = 'grid-boolean-column'
+      #   hs[:width]        = 100 if col.width.nil?
+      # end
+
+      row_defs << {name: 'Fred'}
+
+      {
+        columnDefs: col_defs,
+        #rowDefs:    repository.raw_query(report.runnable_sql)
+        #rowDefs:    dataminer_query(report.runnable_sql)#repository.raw_query(report.runnable_sql)
+        rowDefs: row_defs
+      }.to_json
+      #{"columnDefs":[{"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/books/' + data.id + '/edit|edit'","colId":"edit_link2","cellRenderer":"crossbeamsGridFormatters.hrefSimpleFormatter"},{"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"valueGetter":"'/books/' + data.id + '|delete|Are you sure?'","colId":"delete_link","cellRenderer":"crossbeamsGridFormatters.hrefPromptFormatter"},{"headerName":"Id","field":"id","hide":true,"headerTooltip":"Id","enableValue":true,"cellClass":"grid-number-column","width":100},{"headerName":"Title","field":"title","hide":false,"headerTooltip":"Title","width":200,"enableRowGroup":true,"enablePivot":true},{"headerName":"Author","field":"author","hide":false,"headerTooltip":"Author","width":150,"enableRowGroup":true,"enablePivot":true}],"rowDefs":[{"id":2,"title":"Fred is Green, and Blue","author":"Fred"},{"id":3,"title":"A new book > Old book","author":"John"},{"id":1,"title":"TDD","author":"Kent Beck"},{"id":5,"title":"600980218299308328","author":"Pallet number"},{"id":4,"title":"Something","author":"Someones"}]}.to_json
+    end
+
+    # TEST Crossbeams::Layout
+    r.is 'lay' do
+      # USe layout...
+      book = Struct.new(:title, :author, :id).new('Book name', 'John J', 12)
+      @layout = Crossbeams::Layout::Page.new form_object: book, name: 'book'
+
+      @layout.with_form do |form, page_config|
+
+          form.action '/save_book' #routes.book_path(id: page_config.form_object.id)
+          # form.action routes.book_path(id: book.id)
+          form.method :update
+
+          form.add_field :title
+          form.add_field :author
+          # form.row do |row|
+          # end
+      end
+
+      view('crossbeams_layout_page')
+    end
+
+    # r.on 'search' do
+    #   r.on :id do |id|
+    #     #"Searched for '#{id}'"
+    #     rpt_name = id
+    #     @rpt = DataminerControl.get_report_from_search(rpt_name)
+    #     @qps = @rpt.query_parameter_definitions
+    #     @rpt_id = id
+    #     #@load_params = params[:back] && params[:back] == 'y'
+    #     view('search_filter')
+    #
+    #   end
+    # end
+  end
+
+  # Dir['./helpers/*.rb'].each { |f| require f }
+end

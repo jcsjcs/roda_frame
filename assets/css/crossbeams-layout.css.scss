@@ -1,0 +1,64 @@
+#content {
+  padding: 0 1em;
+}
+.grid-head {
+  background-color: #375c7f;
+  padding: 0.2em;
+}
+.grid-caption {
+  font-size: 1.2em;
+  font-weight: bold;
+  padding-left: 2em;
+  color: aliceblue;
+  vertical-align: sub;
+}
+.un-formed-input {
+  padding: 0.5em 0.6em;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-shadow: inset 0 1px 3px #ddd;
+  border-radius: 4px;
+  vertical-align: middle;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.content-target {
+  min-height: 150px;
+}
+.content-loading{
+  background: transparent url(loading_bars.gif) 0 0 no-repeat;
+}
+section.crossbeams_layout {
+  border-bottom: gray thin solid;
+}
+.grid-number-column {
+  text-align: right;
+}
+.grid-boolean-column {
+  text-align: center;
+}
+.grid-row-red {
+  color: red;
+  background-color: yellow;
+  text-align: right;
+}
+.ac_icon {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  background-repeat: no-repeat;
+  display: inline-block;
+  padding-right: 4px;
+}
+.ac_icon_uncheck {
+  @extend .ac_icon;
+  background-image: url(checkbox.png);
+  background-position: -50px -4px;
+}
+.ac_icon_check {
+  @extend .ac_icon;
+  background-image: url(checkbox.png);
+  background-position: -25px -4px;
+}
+

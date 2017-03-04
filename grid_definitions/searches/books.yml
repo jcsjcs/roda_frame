@@ -1,0 +1,22 @@
+---
+:dataminer_definition: book_index
+:actions:
+  - :url: /books/{:id}/edit
+    :text: edit
+  - :url: /books/{:id}
+    :text: delete
+    :is_delete: true
+
+# hs = {headerName: '',
+#       width: 60,
+#       suppressMenu: true, suppressSorting: true, suppressMovable: true, suppressFilter: true, enableRowGroup: false, enablePivot: false, enableValue: false, suppressCsvExport: true, suppressToolPanel: true,
+#       valueGetter: "'/books/' + data.id + '/edit|edit'", colId: 'edit_link2', cellRenderer: 'crossbeamsGridFormatters.hrefSimpleFormatter'}
+# #hs = {headerName: 'Edit2', field: 'id', valueGetter: "'/books/' + data.id + '/edit|' + data.id", colId: 'edit_link2', cellRenderer: 'crossbeamsGridFormatters.hrefSimpleFormatter'}
+# # 1: with text, 2: with data value...
+# col_defs << hs
+#
+# # TODO: Delete - with prompt and DELETE method, not GET!
+# hs = {headerName: '',
+#       width: 60,
+#       suppressMenu: true, suppressSorting: true, suppressMovable: true, suppressFilter: true, enableRowGroup: false, enablePivot: false, enableValue: false, suppressCsvExport: true,
+#       valueGetter: "'/books/' + data.id + '|delete|Are you sure?'", colId: 'delete_link', cellRenderer: 'crossbeamsGridFormatters.hrefPromptFormatter'}
