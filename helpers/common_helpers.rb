@@ -1,4 +1,11 @@
 module CommonHelpers
+  # Show a Crossbeams::Layout page
+  # - The block must return a Crossbeams::Layout::Page
+  def show_page(&block)
+    @layout = block.yield
+    view('crossbeams_layout_page')
+  end
+
   def make_options(ar)
     ar.map do |a|
       if a.kind_of?(Array)
