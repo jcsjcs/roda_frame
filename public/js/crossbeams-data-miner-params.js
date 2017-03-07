@@ -161,7 +161,7 @@ var crossbeamsDataMinerParams = {
   loadCurrentParams: function() {
     var key = crossbeamsLocalStorage.genStandardKey(this.reportNo);
     if(crossbeamsLocalStorage.hasItem(key)) {
-      //console.log('LOADING', reportNo, key);
+      //console.log('LOADING', this.reportNo, key);
       var stored = crossbeamsLocalStorage.getItem(key);
       document.querySelector('#' + this.formId + " input[name=limit]").value = stored.limit;
       document.querySelector('#' + this.formId + " input[name=offset]").value = stored.offset;

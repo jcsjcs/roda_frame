@@ -2,9 +2,8 @@ module Framework
   module Search
     class Filter
       def self.call(id, params)
-        rpt = DataminerControl.get_report_from_search(id)
-        qps = rpt.query_parameter_definitions
-        OpenStruct.new(rpt: rpt, qps: qps, rpt_id: id, load_params: (params[:back] && params[:back] == 'y') )
+        dmc = DataminerControl.new(search_file: id)
+        OpenStruct.new(rpt: dmc.report, qps: dmc.report.query_parameter_definitions, rpt_id: id, load_params: (params[:back] && params[:back] == 'y') )
       end
     end
   end

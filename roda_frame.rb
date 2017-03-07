@@ -43,6 +43,11 @@ class RodaFrame < Roda
   plugin :multi_route
   plugin :content_for, :append=>true
   plugin :indifferent_params
+  # plugin :error_handler do |e|
+  #   # TODO: how to handle AJAX/JSON etc...
+  #   view(inline: "An error occurred - #{e.message}") # TODO: refine this to handle certain classes of errors in certain ways.
+  #   # (could do something like - inline: render errorview(e) ...)
+  # end
   Dir['./routes/*.rb'].each { |f| require f }
 
   # TODO: route for dataminer.
@@ -154,20 +159,6 @@ class RodaFrame < Roda
 
       view('crossbeams_layout_page')
     end
-
-    # r.on 'search' do
-    #   r.on :id do |id|
-    #     #"Searched for '#{id}'"
-    #     rpt_name = id
-    #     @rpt = DataminerControl.get_report_from_search(rpt_name)
-    #     @qps = @rpt.query_parameter_definitions
-    #     @rpt_id = id
-    #     #@load_params = params[:back] && params[:back] == 'y'
-    #     view('search_filter')
-    #
-    #   end
-    # end
   end
 
-  # Dir['./helpers/*.rb'].each { |f| require f }
 end

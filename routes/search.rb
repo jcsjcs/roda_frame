@@ -14,7 +14,9 @@ class RodaFrame < Roda
 
       r.on 'grid' do
         response['Content-Type'] = 'application/json'
-        DataminerControl.grid_from_dataminer_search(id, params)
+
+        dmc = DataminerControl.new(search_file: id)
+        dmc.search_rows(params)
       end
     end
   end
