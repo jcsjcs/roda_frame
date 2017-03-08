@@ -184,6 +184,14 @@
   :ordered_list: 
   :ui_priority: 1
   :list_def: 
+- :column: users.active
+  :caption: Active
+  :data_type: :boolean
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
 - :column: users.created_at
   :caption: Created
   :data_type: :datetime

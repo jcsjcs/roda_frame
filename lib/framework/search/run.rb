@@ -9,7 +9,7 @@ module Framework
         layout.build do |page, page_config|
           page.row do |row|
             row.column do | col|
-              col.add_text "<a href='/search/#{id}?back=y'>Back</a>"
+              col.add_text "<a href='/search/#{id}?back=y' class='pure-button'>Back</a>"
             end
           end
           page.add_grid('grd1', "/search/#{id}/grid?json_var=#{CGI.escape(params[:json_var])}" <<

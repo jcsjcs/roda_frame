@@ -1,5 +1,5 @@
 class DataminerControl
-  attr_reader :report, :search_def
+  attr_reader :report, :search_def, :list_def
 
   # TODO: Use some kind of config for this
   ROOT = File.join(File.dirname(__FILE__), '..')
@@ -13,6 +13,9 @@ class DataminerControl
     if options[:search_file]
       @search_def = load_search_definition(options[:search_file])
       @report     = get_report(@search_def[:dataminer_definition])
+    elsif options[:list_file]
+      @list_def   = load_list_definition(options[:list_file])
+      @report     = get_report(@list_def[:dataminer_definition])
     else
       @report     = get_report(options[:report_file])
     end
@@ -22,6 +25,19 @@ class DataminerControl
     apply_params(params)
 
     actions  = search_def[:actions]
+    col_defs = column_definitions(report, actions: actions)
+
+    {
+      columnDefs: col_defs,
+      rowDefs:    dataminer_query(report.runnable_sql)
+    }.to_json
+  end
+
+  def list_rows(params)
+    n_params = {json_var: list_def[:conditions].to_json }
+    apply_params(n_params) unless n_params.nil? || n_params.empty?
+
+    actions  = list_def[:actions]
     col_defs = column_definitions(report, actions: actions)
 
     {
@@ -80,6 +96,11 @@ class DataminerControl
 
   def load_search_definition(file_name)
     path    = File.join(ROOT, 'grid_definitions', 'searches', file_name.sub('.yml', '') << '.yml')
+    YAML.load(File.read(path))
+  end
+
+  def load_list_definition(file_name)
+    path    = File.join(ROOT, 'grid_definitions', 'lists', file_name.sub('.yml', '') << '.yml')
     YAML.load(File.read(path))
   end
 
