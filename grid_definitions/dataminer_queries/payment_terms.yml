@@ -1,0 +1,164 @@
+---
+:caption: Payment Terms
+:sql: "SELECT payment_terms.id, debtor_or_creditor, payment_term_date_types.type_of_date,
+  short_description, long_description, for_liquidation, percentage, days, amount_per_carton\r\n
+  \ FROM payment_terms\r\n  JOIN payment_term_date_types ON payment_term_date_types.id
+  = payment_terms.payment_term_date_type_id"
+:limit: 
+:offset: 
+:columns:
+  id:
+    :name: id
+    :sequence_no: 1
+    :caption: Id
+    :namespaced_name: payment_terms.id
+    :data_type: :integer
+    :width: 
+    :format: 
+    :hide: 'true'
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: true
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  debtor_or_creditor:
+    :name: debtor_or_creditor
+    :sequence_no: 2
+    :caption: DR/CR
+    :namespaced_name: debtor_or_creditor
+    :data_type: :string
+    :width: 80
+    :format: 
+    :hide: false
+    :groupable: true
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  type_of_date:
+    :name: type_of_date
+    :sequence_no: 3
+    :caption: Date type
+    :namespaced_name: payment_term_date_types.type_of_date
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: true
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  short_description:
+    :name: short_description
+    :sequence_no: 4
+    :caption: Short description
+    :namespaced_name: short_description
+    :data_type: :string
+    :width: 150
+    :format: 
+    :hide: false
+    :groupable: true
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  long_description:
+    :name: long_description
+    :sequence_no: 5
+    :caption: Long description
+    :namespaced_name: long_description
+    :data_type: :string
+    :width: 200
+    :format: 
+    :hide: false
+    :groupable: true
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  for_liquidation:
+    :name: for_liquidation
+    :sequence_no: 6
+    :caption: Liquidation
+    :namespaced_name: for_liquidation
+    :data_type: :boolean
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: true
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  percentage:
+    :name: percentage
+    :sequence_no: 7
+    :caption: "%"
+    :namespaced_name: percentage
+    :data_type: :integer
+    :width: 50
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: true
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  days:
+    :name: days
+    :sequence_no: 8
+    :caption: Days
+    :namespaced_name: days
+    :data_type: :integer
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: true
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  amount_per_carton:
+    :name: amount_per_carton
+    :sequence_no: 9
+    :caption: Amt per carton
+    :namespaced_name: amount_per_carton
+    :data_type: :number
+    :width: 150
+    :format: :delimited_1000
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: true
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+:query_parameter_definitions:
+- :column: debtor_or_creditor
+  :caption: DR / CR
+  :data_type: :string
+  :control_type: :list
+  :default_value: 
+  :ordered_list: false
+  :ui_priority: 1
+  :list_def:
+  - D
+  - C
+  - B
+- :column: payment_terms.payment_term_date_type_id
+  :caption: Date type
+  :data_type: :integer
+  :control_type: :list
+  :default_value: 
+  :ordered_list: 53
+  :ui_priority: 1
+  :list_def: SELECT type_of_date, id FROM payment_term_date_types ORDER BY type_of_date

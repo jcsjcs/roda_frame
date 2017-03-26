@@ -14,6 +14,7 @@ Dir['./helpers/**/*.rb'].each { |f| require f }
 # Dir['./persistence/**/*.rb'].each { |f| puts f }
 require './repositories/user_repo'
 require './repositories/supplier_invoice_repo'
+require './repositories/payment_term_repo'
 require './repositories/warehouse/book_repo' # pretend warehouse repo.
 require './lib/db_connections'
 require './lib/dataminer_control'
@@ -79,7 +80,12 @@ class RodaFrame < Roda
       s << book_repo.query('id < 3').to_a.map { |b| b.title }.inspect
       s << '<p>---</p>'
       s << user_repo.count_them[:count].to_s #.to_a.inspect
-      s
+      #s << user_repo.relations.entries.inspect#methods.sort.inspect
+      pt_repo = PaymentTermRepo.new(DB.db)
+      s << "<p>DESC: #{pt_repo.payment_terms.first.short_description}...</p>"
+      #s << pt_repo.payment_terms.new({}).days #methods.sort.inspect
+      s << pt_repo.payment_terms.methods.sort.inspect
+      view(inline: s)
     end
     r.multi_route
     r.is 'test' do

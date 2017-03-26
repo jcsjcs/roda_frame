@@ -24,27 +24,36 @@
   </head>
   <body>
     <nav class="navbar navbar-default navbar-inverse">
-      <div class="container">
-        <ul class="nav navbar-nav">
-          <li><a href="/">Home</a></li>
-          <li><a href="/finance/payment_terms/payment_terms/">Payment terms</a></li>
-          <li><a href="/test">Test VIEW</a></li>
-          <li><a href="/grid">Grid</a></li>
-          <li><a href="/lay">Layout</a></li>
-          <li><a href="/search/users">Search Users</a></li>
-          <li><a href="/list/active_users">Active Users</a></li>
-          <li><a href="/<%=ENV['DM_PREFIX']%>">Dataminer</a></li>
-          <li style="color:yellow"> <%#= env['warden'].user ? env['warden'].user.name : 'not logged-in' %> </li>
+      <div class="pure-menu pure-menu-horizontal">
+        <ul class="pure-menu-list">
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/">Home</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/finance/payment_terms/payment_terms/">Payment terms</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/test">Test VIEW</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/grid">Grid</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/lay">Layout</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/search/users">Search Users</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/list/active_users">Active Users</a></li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/finance/payment_terms/payment_terms/">Payment Terms</a></li>
+          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+            <a href="#" id="menuLink1" class="pure-menu-link">Payment Terms</a>
+            <ul class="pure-menu-children">
+              <li class="pure-menu-item"><a href="/list/payment_terms" class="pure-menu-link">List</a></li>
+              <li class="pure-menu-item"><a href="/finance/payment_terms/payment_terms/new" class="pure-menu-link">New</a></li>
+              <li class="pure-menu-item"><a href="/search/payment_terms" class="pure-menu-link">Search</a></li>
+            </ul>
+          </li>
+          <li class="pure-menu-item"><a class="pure-menu-link" href="/<%=ENV['DM_PREFIX']%>">Dataminer</a></li>
+          <!--li style="color:yellow"> <%#= env['warden'].user ? env['warden'].user.name : 'not logged-in' %> </li-->
           <%# if env['warden'].user && env['warden'].user.name #session[:user_id] %>
-            <li><a href="/users">Users</a></li>
-            <li>
+            <li class="pure-menu-item"><a class="pure-menu-link" href="/users">Users</a></li>
+            <li class="pure-menu-item">
               <form action="/logout" method="post" class="navbar-form">
                 <%#= csrf_tag %>
-                <input type="submit" value="Logout" class="btn btn-link">
+                <input type="submit" value="Logout" class="pure-menu-link">
               </form>
             </li>
           <%# else %>
-            <li><a href="/login">Login</a></li>
+            <li class="pure-menu-item"><a class="pure-menu-link" href="/login">Login</a></li>
           <%# end %>
         </ul>
 
@@ -55,8 +64,9 @@
         <% end %>
       </div>
     </nav>
+    <hr>
     <div class="container">
-      <div class="page-header">My Roda App</div>
+      <div class="page-header">Roda Frame</div>
       <%= yield %>
     </div>
 

@@ -48,7 +48,7 @@ class DataminerControl
 
   def apply_params(params)
     #{"col"=>"users.department_id", "op"=>"=", "opText"=>"is", "val"=>"17", "text"=>"Finance", "caption"=>"Department"}
-    input_parameters = ::JSON.parse(params[:json_var])
+    input_parameters = ::JSON.parse(params[:json_var]) || []
     parms = []
     # Check if this should become an IN parmeter (list of equal checks for a column.
     eq_sel = input_parameters.select { |p| p['op'] == '=' }.group_by { |p| p['col'] }

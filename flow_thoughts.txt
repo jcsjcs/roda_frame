@@ -1,0 +1,22 @@
+top-level
+---------
+  - makes db conn
+  - loads repos, helpers ec
+  - fires top-level routes
+  - loads all other routes
+
+route
+  - routes as per url+params
+  - each route typically will only do this:
+    redirect_or_show { AControllerAction.call(id, params) }
+
+controller
+  - 1 action per controller
+  - passes params to business code in lib
+  - based on results of business logic, will decide to:
+    - redirect to another action after setting flash
+    - or build a layout and return that
+  - return obj is fixed design like: res: ok/redirect/error, redirect url:xxx, layout: xxx, err_msg: xxx
+
+AJAX...
+
