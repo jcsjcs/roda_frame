@@ -4,8 +4,19 @@ module Finance
       def self.call(id) # TODO: handle re-display on validation error...
 
         pt_repo = PaymentTermRepo.new(DB.db)
+        obj     = pt_repo.payment_terms.by_pk(id).one
+        rules = { fields: {
+          payment_term_date_type_id: { renderer: :select, selected: obj.payment_term_date_type_id, options: pt_repo.date_types_for_select },
+          short_description:         { },
+          long_description:          { length: 50 },
+          for_liquidation:           { renderer: :checkbox },
+          percentage:                { subtype: :integer },
+          days:                      { subtype: :integer },
+          amount_per_carton:         { subtype: :numeric },
+          debtor_or_creditor:        { renderer: :select, options: ['B', 'C', 'D'] }
+        } }
 
-        layout = Crossbeams::Layout::Page.build do |page|
+        layout = Crossbeams::Layout::Page.build(rules) do |page|
           page.form_object pt_repo.payment_terms.by_pk(id).one
           page.form do |form|
             form.action "/finance/payment_terms/payment_terms/#{id}/update"
