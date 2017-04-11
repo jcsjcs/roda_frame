@@ -53,12 +53,132 @@ section.crossbeams_layout {
 }
 .ac_icon_uncheck {
   @extend .ac_icon;
-  background-image: url(checkbox.png);
+  background-image: url(/images/checkbox.png);
   background-position: -50px -4px;
 }
 .ac_icon_check {
   @extend .ac_icon;
-  background-image: url(checkbox.png);
+  background-image: url(/images/checkbox.png);
   background-position: -25px -4px;
+}
+
+option[value=""] {
+  color: #999;
+  font-style: italic;
+}
+
+/* Main grid layout */
+.site {
+  display: flex;
+  min-height: 98vh;
+  flex-direction: column;
+}
+.container {
+  flex: 1;
+}
+
+header,
+.footness {
+  flex: none; /* 2 */
+}
+.footness {
+  background-color: #0F9962;
+}
+.footness p {
+  padding: 0 0.5em;
+  color: white;
+}
+
+/* Main content form layout */
+
+.crossbeams-field { padding: 0.5em; }
+.crossbeams-row {
+    width: 100%;
+    max-width: 1200px; /* This is ok for forms, but grids should be able to break out to the full width.... */
+    /* margin: 0 auto;*/
+}
+.crossbeams-row {
+  display: flex;
+}
+
+.crossbeams-col {
+  flex: 1;
+}
+
+input, textarea, select {
+  font-size: 1em;
+  padding: 2px 5px 4px;
+/*  border: 0 none; */
+  border-radius: 2px;
+}
+/* flexbox styles */
+/* fieldset div { */
+.crossbeams-field {
+  display: flex;
+  /*align-items: center; */
+}
+
+label {
+  order: 1;
+  width: 10em;
+  text-align: right;
+  padding-right: 0.5em;
+/*  white-space: nowrap; */
+  user-select: none;
+  cursor: pointer;
+}
+
+input, textarea, select {
+  order: 2;
+  flex: 1 1 auto;
+}
+
+input[type="checkbox"], input[type="radio"] {
+  order: 1;
+  flex: none;
+  width: auto;
+  margin-left: 10em;
+}
+
+input[type="checkbox"] ~ label, input[type="radio"] ~ label {
+  width: auto;
+  text-align: left;
+  padding-left: 0.4em;
+}
+
+
+
+/* label state styles */
+input:focus ~ label, textarea:focus ~ label, select:focus ~ label {
+  color: darkcyan;
+}
+
+input:checked ~ label {
+  font-weight: bold;
+}
+/* RESPONSIVE */
+@media (max-width: 48em) {
+  .crossbeams-row {
+    flex-direction: column;
+  }
+}
+@media (max-width: 600px) {
+  input,
+  select{width: 100%;}
+  input[type="radio"],
+  input[type="checkbox"],
+  input[type="submit"]{
+  width: auto;
+  }
+  form .crossbeams-field{
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 6px 0;
+  }
+  form .crossbeams-field label{
+  padding: 0 0 5px 0;
+  margin: 10px 0 0 0;
+  text-align: left;
+  }
 }
 
