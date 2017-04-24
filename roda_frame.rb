@@ -6,6 +6,7 @@ require 'rom-sql'
 require 'rom-repository'
 require 'crossbeams/layout'
 require 'crossbeams/dataminer'
+require 'crossbeams/label_designer'
 require 'yaml'
 #require 'pry'
 
@@ -38,6 +39,7 @@ class RodaFrame < Roda
   # use SomeMiddleware
 
   plugin :render
+  plugin :partials
   plugin :assets, css: 'style.scss'#, js: 'behave.js'
   plugin :public # serve assets from public folder.
   plugin :view_subdirs
