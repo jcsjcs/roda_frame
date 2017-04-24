@@ -1,4 +1,5 @@
 *.backup
+*.old
 .sass-cache/
 public/js/ag-enterprise-activation.js
 public/js/ag-grid-*.*
