@@ -1,0 +1,323 @@
+---
+:caption: Farms
+:sql: select farms.id, farms.parties_role_id, farms.farm_code, farms.farm_description,
+  farms.farm_area, farms.max_empty_bins, farms.bin_availability_factor, farms.gap,
+  farms.remark1_ptlocation, farms.remark2_ptaccount, farms.farm_group_id, farms.farm_group_code,
+  farms.party_name, farms.party_type_name, farms.role_name, farms.location_id, farms.farm_owner,
+  parties.party_name as farm_owner_code from farms LEFT OUTER JOIN parties_roles ON
+  parties_roles.id=farms.farm_owner LEFT OUTER JOIN parties on parties.id=parties_roles.party_id  order
+  by farms.farm_code,farms.farm_description ASC
+:limit: 100
+:offset: 
+:columns:
+  id:
+    :name: id
+    :sequence_no: 1
+    :caption: Id
+    :namespaced_name: farms.id
+    :data_type: :integer
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  parties_role_id:
+    :name: parties_role_id
+    :sequence_no: 2
+    :caption: Parties role
+    :namespaced_name: farms.parties_role_id
+    :data_type: :integer
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  farm_code:
+    :name: farm_code
+    :sequence_no: 3
+    :caption: Farm code
+    :namespaced_name: farms.farm_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  farm_description:
+    :name: farm_description
+    :sequence_no: 4
+    :caption: Farm description
+    :namespaced_name: farms.farm_description
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  farm_area:
+    :name: farm_area
+    :sequence_no: 5
+    :caption: Farm area
+    :namespaced_name: farms.farm_area
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  max_empty_bins:
+    :name: max_empty_bins
+    :sequence_no: 6
+    :caption: Max empty bins
+    :namespaced_name: farms.max_empty_bins
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  bin_availability_factor:
+    :name: bin_availability_factor
+    :sequence_no: 7
+    :caption: Bin availability factor
+    :namespaced_name: farms.bin_availability_factor
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  gap:
+    :name: gap
+    :sequence_no: 8
+    :caption: Gap
+    :namespaced_name: farms.gap
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  remark1_ptlocation:
+    :name: remark1_ptlocation
+    :sequence_no: 9
+    :caption: Remark1 ptlocation
+    :namespaced_name: farms.remark1_ptlocation
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  remark2_ptaccount:
+    :name: remark2_ptaccount
+    :sequence_no: 10
+    :caption: Remark2 ptaccount
+    :namespaced_name: farms.remark2_ptaccount
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  farm_group_id:
+    :name: farm_group_id
+    :sequence_no: 11
+    :caption: Farm group
+    :namespaced_name: farms.farm_group_id
+    :data_type: :integer
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  farm_group_code:
+    :name: farm_group_code
+    :sequence_no: 12
+    :caption: Farm group code
+    :namespaced_name: farms.farm_group_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  party_name:
+    :name: party_name
+    :sequence_no: 13
+    :caption: Party name
+    :namespaced_name: farms.party_name
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  party_type_name:
+    :name: party_type_name
+    :sequence_no: 14
+    :caption: Party type name
+    :namespaced_name: farms.party_type_name
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  role_name:
+    :name: role_name
+    :sequence_no: 15
+    :caption: Role name
+    :namespaced_name: farms.role_name
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  location_id:
+    :name: location_id
+    :sequence_no: 16
+    :caption: Location
+    :namespaced_name: farms.location_id
+    :data_type: :integer
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  farm_owner:
+    :name: farm_owner
+    :sequence_no: 17
+    :caption: Farm owner
+    :namespaced_name: farms.farm_owner
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  farm_owner_code:
+    :name: farm_owner_code
+    :sequence_no: 18
+    :caption: Farm owner code
+    :namespaced_name: parties.party_name
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+:query_parameter_definitions:
+- :column: party_type_name
+  :caption: party_type_name
+  :data_type: :string
+  :control_type: :list
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: select distinct party_type_name from farms
+- :column: party_name
+  :caption: party_name
+  :data_type: :string
+  :control_type: :list
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: select distinct party_name from farms
+- :column: role_name
+  :caption: role_name
+  :data_type: :string
+  :control_type: :list
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: select distinct role_name from farms
+- :column: farm_group_code
+  :caption: farm_group_code
+  :data_type: :string
+  :control_type: :list
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: select distinct farm_group_code from farms
+- :column: farm_code
+  :caption: farm_code
+  :data_type: :string
+  :control_type: :list
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: select distinct farm_code from farms

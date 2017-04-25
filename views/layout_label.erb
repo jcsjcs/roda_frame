@@ -20,12 +20,16 @@
     <!--link rel="stylesheet" href="/css/grids-responsive.css"-->
     <link rel="stylesheet" href="/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/tachyons.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/jquery-ui.css">
     <%= assets(:css) %>
+    <%= content_for :late_style %>
+
     <!-- HERE GOES THE LABEL DESIGNER JS -->
   </head>
   <body class="site">
   <header>
-      <div class="page-header">Roda Frame</div>
+    <%= partial 'page_banner' %>
       <!-- FOR NAVIGATION IDEA: file:///home/james/SilberbauerComputing/JMT/framework_upgrade/pure_css/Frame4-dyn-menu.html -->
               <!--ul>
                 <li><a href="#">Home</a></li>
@@ -73,6 +77,10 @@
     <script src="/js/crossbeams-data-miner-params.js"></script>
     <script src="/js/crossbeams-grid-loader.js"></script>
     <script src="/js/choices.min.js"></script>
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="/js/jquery-ui-1.12.1.min.js"></script>
+    <script src="/js/konva.min.js"></script>
+
     <%#= javascript 'ag-grid-enterprise', 'ag-enterprise-activation', 'crossbeams-local-storage', 'crossbeams-utils', 'crossbeams-layout', 'crossbeams-data-miner-params', 'crossbeams-grid-loader' %>
 
     <script>

@@ -6,7 +6,9 @@ require 'rom-sql'
 require 'rom-repository'
 require 'crossbeams/layout'
 require 'crossbeams/dataminer'
+require 'crossbeams/dataminer_interface'
 require 'crossbeams/label_designer'
+require 'crossbeams/rack_middleware'
 require 'yaml'
 #require 'pry'
 
@@ -36,7 +38,9 @@ class RodaFrame < Roda
 
   SOME_CONSTANT = 1
 
-  # use SomeMiddleware
+  use Crossbeams::RackMiddleware::Banner, template: 'views/_page_banner.erb'
+  use Crossbeams::DataminerInterface::App, url_prefix: 'dataminer/', dm_reports_location: '/home/james/ra/roda_frame/reports',
+    dm_js_location: 'js', dm_css_location: 'css', db_connection: DB.base
 
   plugin :render
   plugin :partials
@@ -76,6 +80,7 @@ class RodaFrame < Roda
       s << '<p>---</p>'
       s << supplier_invoice_repo.query('id < 3').first.pallet_filter.inspect
       s << '<br>'
+      s << "<p>TST: #{ar = supplier_invoice_repo.query('id < 3').first.pallet_filter; ar.class}... need to get to Array!!!!!</p>"
       s << "<p>FILTER: #{supplier_invoice_repo.query('id < 3').first.pallet_filter.class.name}</p>"
       s << supplier_invoice_repo.query('id < 3').first.status.class.name
       s << '<p>---</p>'

@@ -14,6 +14,7 @@ gem 'crossbeams-layout', path: '/home/james/ra/crossbeams/crossbeams-layout'
 #####gem 'crossbeams-dataminer_portal', path: '/home/james/ra/crossbeams/crossbeams-dataminer_portal'
 gem 'crossbeams-rack_middleware', path: '/home/james/ra/crossbeams/crossbeams-rack_middleware'
 gem 'crossbeams-label_designer', path: '/home/james/ra/crossbeams/crossbeams-label_designer'
+gem 'crossbeams-dataminer_interface', path: '/home/james/ra/crossbeams/crossbeams-dataminer_interface'
 
 gem 'rerun' # actually just for dev...
 gem 'pry'
