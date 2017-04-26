@@ -6,7 +6,8 @@ class DBConnections
 
   def make_connections
      configuration = ROM::Configuration.new(default: [:sql,
-                                                      'postgres://postgres:postgres@localhost/exporter',
+                                                      # 'postgres://postgres:postgres@localhost/exporter',
+                                                      'postgres://postgres:postgres@localhost/kromco',
                                                       inferrable_relations: []],
                                                        #[:users, :supplier_invoices]],
                                            warehouse: [:sql,

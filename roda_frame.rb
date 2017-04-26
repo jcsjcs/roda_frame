@@ -16,8 +16,9 @@ Dir['./helpers/**/*.rb'].each { |f| require f }
 # Dir['./persistence/**/*.rb'].each { |f| require f }
 # Dir['./persistence/**/*.rb'].each { |f| puts f }
 require './repositories/user_repo'
-require './repositories/supplier_invoice_repo'
-require './repositories/payment_term_repo'
+require './repositories/commodity_repo'
+# require './repositories/supplier_invoice_repo'
+# require './repositories/payment_term_repo'
 require './repositories/warehouse/book_repo' # pretend warehouse repo.
 require './lib/db_connections'
 require './lib/dataminer_control'
@@ -73,25 +74,33 @@ class RodaFrame < Roda
       # s << DB.base['select * from users order by id desc limit 2'].to_a.inspect
       # s << '<p>---</p>'
       # s << DB.base(:warehouse)['select * from books'].to_a.inspect
-      user_repo = UserRepo.new(DB.db)
-      s = user_repo.query('id > 164').to_a.map { |a| a.class.name }.inspect
-      book_repo = BookRepo.new(DB.db)
-      supplier_invoice_repo = SupplierInvoiceRepo.new(DB.db)
-      s << '<p>---</p>'
-      s << supplier_invoice_repo.query('id < 3').first.pallet_filter.inspect
-      s << '<br>'
-      s << "<p>TST: #{ar = supplier_invoice_repo.query('id < 3').first.pallet_filter; ar.class}... need to get to Array!!!!!</p>"
-      s << "<p>FILTER: #{supplier_invoice_repo.query('id < 3').first.pallet_filter.class.name}</p>"
-      s << supplier_invoice_repo.query('id < 3').first.status.class.name
-      s << '<p>---</p>'
-      s << book_repo.query('id < 3').to_a.map { |b| b.title }.inspect
-      s << '<p>---</p>'
-      s << user_repo.count_them[:count].to_s #.to_a.inspect
-      #s << user_repo.relations.entries.inspect#methods.sort.inspect
-      pt_repo = PaymentTermRepo.new(DB.db)
-      s << "<p>DESC: #{pt_repo.payment_terms.first.short_description}...</p>"
-      #s << pt_repo.payment_terms.new({}).days #methods.sort.inspect
-      s << pt_repo.payment_terms.methods.sort.inspect
+      # user_repo = UserRepo.new(DB.db)
+      # s = user_repo.query('id > 164').to_a.map { |a| a.class.name }.inspect
+      # book_repo = BookRepo.new(DB.db)
+      # # supplier_invoice_repo = SupplierInvoiceRepo.new(DB.db)
+      # # s << '<p>---</p>'
+      # # s << supplier_invoice_repo.query('id < 3').first.pallet_filter.inspect
+      # # s << '<br>'
+      # # s << "<p>TST: #{ar = supplier_invoice_repo.query('id < 3').first.pallet_filter; ar.class}... need to get to Array!!!!!</p>"
+      # # s << "<p>FILTER: #{supplier_invoice_repo.query('id < 3').first.pallet_filter.class.name}</p>"
+      # # s << supplier_invoice_repo.query('id < 3').first.status.class.name
+      # s << '<p>---</p>'
+      # s << book_repo.query('id < 3').to_a.map { |b| b.title }.inspect
+      # s << '<p>---</p>'
+      # s << user_repo.count_them[:count].to_s #.to_a.inspect
+      # #s << user_repo.relations.entries.inspect#methods.sort.inspect
+      # # pt_repo = PaymentTermRepo.new(DB.db)
+      # # s << "<p>DESC: #{pt_repo.payment_terms.first.short_description}...</p>"
+      # # #s << pt_repo.payment_terms.new({}).days #methods.sort.inspect
+      # # s << pt_repo.payment_terms.methods.sort.inspect
+      s = <<-EOS
+      <h2>Kromco packhouse</h2>
+      <p>There are currently 99 bins and 99 pallets on site.</p>
+      <p>Since 1 December 2016: <ul>
+      <li>99 deliveries have been received</li>
+      <li>99 cartons have been packed</li>
+      </p>
+      EOS
       view(inline: s)
     end
     r.multi_route

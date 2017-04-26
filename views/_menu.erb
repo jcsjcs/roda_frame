@@ -3,13 +3,21 @@
               <label for="mainNavButton" onclick>Menu</label>
         <ul class="pure-menu-list">
           <li><a href="/">Home</a></li>
-          <li><a href="/finance/payment_terms/payment_terms/">Payment terms</a></li>
+          <!-- <li><a href="/finance/payment_terms/payment_terms/">Payment terms</a></li> -->
           <li><a href="/test">Test VIEW</a></li>
           <li><a href="/grid">Grid</a></li>
           <li><a href="/lay">Layout</a></li>
+          <li>
+            <a href="#" id="menuLink1">Commodities</a>
+            <ul>
+              <li><a href="/list/commodities">List</a></li>
+              <li><a href="/masterfiles/fruit_and_packing/commodities/new">New</a></li>
+              <li><a href="/search/commodities">Search</a></li>
+            </ul>
+          </li>
           <li><a href="/search/users">Search Users</a></li>
           <li><a href="/list/active_users">Active Users</a></li>
-          <li><a href="/finance/payment_terms/payment_terms/">Payment Terms</a></li>
+<!--          <li><a href="/finance/payment_terms/payment_terms/">Payment Terms</a></li>
           <li>
             <a href="#" id="menuLink1">Payment Terms</a>
             <ul>
@@ -17,7 +25,7 @@
               <li><a href="/finance/payment_terms/payment_terms/new">New</a></li>
               <li><a href="/search/payment_terms">Search</a></li>
             </ul>
-          </li>
+          </li> -->
           <li>
             <a href="#" id="menuLink1">Label Designer</a>
             <ul>
@@ -30,7 +38,7 @@
           <li><a href="/dataminer/admin">Dataminer Admin</a></li>
           <!--li style="color:yellow"> <%#= env['warden'].user ? env['warden'].user.name : 'not logged-in' %> </li-->
           <%# if env['warden'].user && env['warden'].user.name #session[:user_id] %>
-            <li><a href="/users">Users</a></li>
+          <!-- <li><a href="/users">Users</a></li> -->
             <li>
               <form action="/logout" method="post" class="navbar-form">
                 <%#= csrf_tag %>
