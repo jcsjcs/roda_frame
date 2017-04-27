@@ -1,0 +1,561 @@
+---
+:caption: Get pallets by carton
+:sql: 'select cartons.season_code,cartons.organization_code,cartons.commodity_code,cartons.grade_code,marks.brand_code,cartons.variety_short_long,cartons.target_market_code,cartons.puc,pallets.account_code,cartons.inventory_code,pallets.build_status,cartons.sell_by_code,cartons.inspection_type_code,cartons.qc_result_status,cartons.qc_status_code,pallets.is_depot_pallet,cartons.carton_number,vehicle_job_units.date_time_offloaded,pallets.pallet_format_product_code,cartons.pallet_number
+  ,public.vehicle_jobs.vehicle_job_number,public.rw_active_pallets.rw_run_id,pallets.ppecb_inspection_id,
+  ppecb_inspections.inspection_point, ppecb_inspections.inspector_number, pallets.id
+  from pallets  LEFT OUTER JOIN vehicle_job_units ON (pallets.pallet_number = vehicle_job_units.unit_reference_id)  INNER
+  JOIN cartons ON (pallets.id = cartons.pallet_id)  INNER JOIN marks ON (cartons.carton_mark_code
+  = marks.mark_code)  INNER JOIN  (SELECT min(public.cartons.id) AS id,public.cartons.pallet_id
+  FROM public.cartons INNER JOIN public.pallets ON (public.cartons.pallet_id = public.pallets.id)
+  WHERE (pallet_id > 360000 and public.pallets.consignment_note_number is null  )
+  GROUP BY public.cartons.pallet_id,public.pallets.consignment_note_number) as min_cartons   ON
+  (cartons.id = min_cartons.id)  LEFT OUTER JOIN public.vehicle_jobs ON (vehicle_job_units.vehicle_job_id
+  = public.vehicle_jobs.id)  LEFT OUTER JOIN public.rw_active_pallets ON (pallets.pallet_number
+  = public.rw_active_pallets.pallet_number) LEFT OUTER JOIN public.ppecb_inspections
+  ON (pallets.ppecb_inspection_id = public.ppecb_inspections.id)    '
+:limit: 
+:offset: 
+:columns:
+  season_code:
+    :name: season_code
+    :sequence_no: 1
+    :caption: Season code
+    :namespaced_name: cartons.season_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  organization_code:
+    :name: organization_code
+    :sequence_no: 2
+    :caption: Organization code
+    :namespaced_name: cartons.organization_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  commodity_code:
+    :name: commodity_code
+    :sequence_no: 3
+    :caption: Commodity code
+    :namespaced_name: cartons.commodity_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  grade_code:
+    :name: grade_code
+    :sequence_no: 4
+    :caption: Grade code
+    :namespaced_name: cartons.grade_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  brand_code:
+    :name: brand_code
+    :sequence_no: 5
+    :caption: Brand code
+    :namespaced_name: marks.brand_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  variety_short_long:
+    :name: variety_short_long
+    :sequence_no: 6
+    :caption: Variety short long
+    :namespaced_name: cartons.variety_short_long
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  target_market_code:
+    :name: target_market_code
+    :sequence_no: 7
+    :caption: Target market code
+    :namespaced_name: cartons.target_market_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  puc:
+    :name: puc
+    :sequence_no: 8
+    :caption: Puc
+    :namespaced_name: cartons.puc
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  account_code:
+    :name: account_code
+    :sequence_no: 9
+    :caption: Account code
+    :namespaced_name: pallets.account_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  inventory_code:
+    :name: inventory_code
+    :sequence_no: 10
+    :caption: Inventory code
+    :namespaced_name: cartons.inventory_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  build_status:
+    :name: build_status
+    :sequence_no: 11
+    :caption: Build status
+    :namespaced_name: pallets.build_status
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  sell_by_code:
+    :name: sell_by_code
+    :sequence_no: 12
+    :caption: Sell by code
+    :namespaced_name: cartons.sell_by_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  inspection_type_code:
+    :name: inspection_type_code
+    :sequence_no: 13
+    :caption: Inspection type code
+    :namespaced_name: cartons.inspection_type_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  qc_result_status:
+    :name: qc_result_status
+    :sequence_no: 14
+    :caption: Qc result status
+    :namespaced_name: cartons.qc_result_status
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  qc_status_code:
+    :name: qc_status_code
+    :sequence_no: 15
+    :caption: Qc status code
+    :namespaced_name: cartons.qc_status_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  is_depot_pallet:
+    :name: is_depot_pallet
+    :sequence_no: 16
+    :caption: Is depot pallet
+    :namespaced_name: pallets.is_depot_pallet
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  carton_number:
+    :name: carton_number
+    :sequence_no: 17
+    :caption: Carton number
+    :namespaced_name: cartons.carton_number
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  date_time_offloaded:
+    :name: date_time_offloaded
+    :sequence_no: 18
+    :caption: Date time offloaded
+    :namespaced_name: vehicle_job_units.date_time_offloaded
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  pallet_format_product_code:
+    :name: pallet_format_product_code
+    :sequence_no: 19
+    :caption: Pallet format product code
+    :namespaced_name: pallets.pallet_format_product_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  pallet_number:
+    :name: pallet_number
+    :sequence_no: 20
+    :caption: Pallet number
+    :namespaced_name: cartons.pallet_number
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  vehicle_job_number:
+    :name: vehicle_job_number
+    :sequence_no: 21
+    :caption: Vehicle job number
+    :namespaced_name: public.vehicle_jobs.vehicle_job_number
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  rw_run_id:
+    :name: rw_run_id
+    :sequence_no: 22
+    :caption: Rw run
+    :namespaced_name: public.rw_active_pallets.rw_run_id
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  ppecb_inspection_id:
+    :name: ppecb_inspection_id
+    :sequence_no: 23
+    :caption: Ppecb inspection
+    :namespaced_name: pallets.ppecb_inspection_id
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  inspection_point:
+    :name: inspection_point
+    :sequence_no: 24
+    :caption: Inspection point
+    :namespaced_name: ppecb_inspections.inspection_point
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  inspector_number:
+    :name: inspector_number
+    :sequence_no: 25
+    :caption: Inspector number
+    :namespaced_name: ppecb_inspections.inspector_number
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  id:
+    :name: id
+    :sequence_no: 26
+    :caption: Id
+    :namespaced_name: pallets.id
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+:query_parameter_definitions:
+- :column: cartons.pallet_number
+  :caption: pallet number
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: cartons.organization_code
+  :caption: organization code
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: cartons.commodity_code
+  :caption: commodity code
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: cartons.variety_short_long
+  :caption: variety code
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: cartons.grade_code
+  :caption: grade code
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: cartons.carton_mark_code
+  :caption: mark code
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: cartons.target_market_code
+  :caption: target market code
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: pallets.account_code
+  :caption: account code
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: pallets.pallet_format_product_code
+  :caption: pallet format product code
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: cartons.inventory_code
+  :caption: inventory code
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: pallets.build_status
+  :caption: build status
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: cartons.sell_by_code
+  :caption: sell by
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: cartons.qc_result_status
+  :caption: qc result status
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: cartons.inspection_type_code
+  :caption: inspection type code
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: cartons.gtin
+  :caption: gtin
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: vehicle_jobs.vehicle_job_number
+  :caption: tripsheet number
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: pallets.is_depot_pallet
+  :caption: is depot pallet
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: ppecb_inspections.inspector_number
+  :caption: inspector_number
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: cartons.puc
+  :caption: puc
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 

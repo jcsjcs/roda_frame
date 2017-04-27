@@ -27,11 +27,11 @@
             </ul>
           </li> -->
           <li>
-            <a href="#" id="menuLink1">Label Designer</a>
+            <a href="#" id="menuLink2">Label Designer</a>
             <ul>
-              <li><a href="/label_designer/new">new</a></li>
-              <li><a href="/label_designer/blue">Blue</a></li>
-              <li><a href="/label_designer/green">Green</a></li>
+              <li><a href="/label_designer/new">New</a></li>
+              <li><a href="/label_designer/blue">Existing 1</a></li>
+              <li><a href="/label_designer/green">Existing 2</a></li>
             </ul>
           </li>
           <li><a href="/dataminer/">Dataminer</a></li>
@@ -39,14 +39,14 @@
           <!--li style="color:yellow"> <%#= env['warden'].user ? env['warden'].user.name : 'not logged-in' %> </li-->
           <%# if env['warden'].user && env['warden'].user.name #session[:user_id] %>
           <!-- <li><a href="/users">Users</a></li> -->
-            <li>
+            <!-- <li>
               <form action="/logout" method="post" class="navbar-form">
                 <%#= csrf_tag %>
                 <input type="submit" value="Logout">
               </form>
-            </li>
+            </li> -->
           <%# else %>
-            <li><a href="/login">Login</a></li>
+          <!-- <li><a href="/login">Login</a></li> -->
           <%# end %>
         </ul>
 

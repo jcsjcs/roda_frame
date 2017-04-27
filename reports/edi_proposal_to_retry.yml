@@ -1,0 +1,208 @@
+---
+:caption: EDI proposal to retry
+:sql: select edi_out_proposals.id as id, edi_out_proposals.flow_type, edi_out_proposals.created_on
+  process_created_on, edi_errors.created_on error_on, edi_out_proposals.process_attempts,
+  edi_out_proposals.out_destination_dir, edi_out_proposals.transfer_mechanism, edi_out_proposals.organization_code,
+  edi_out_proposals.hub_address, edi_errors.error_code, edi_errors.transformer, edi_errors.action_type,
+  edi_errors.description from edi_out_proposals left outer join edi_errors on edi_errors.edi_out_proposal_id
+  = edi_out_proposals.id WHERE(edi_out_proposals.process_attempts > 0) order by edi_errors.created_on
+  DESC
+:limit: 
+:offset: 
+:columns:
+  id:
+    :name: id
+    :sequence_no: 1
+    :caption: Id
+    :namespaced_name: edi_out_proposals.id
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  flow_type:
+    :name: flow_type
+    :sequence_no: 2
+    :caption: Flow type
+    :namespaced_name: edi_out_proposals.flow_type
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  process_created_on:
+    :name: process_created_on
+    :sequence_no: 3
+    :caption: Process created on
+    :namespaced_name: edi_out_proposals.created_on
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  error_on:
+    :name: error_on
+    :sequence_no: 4
+    :caption: Error on
+    :namespaced_name: edi_errors.created_on
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  process_attempts:
+    :name: process_attempts
+    :sequence_no: 5
+    :caption: Process attempts
+    :namespaced_name: edi_out_proposals.process_attempts
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  out_destination_dir:
+    :name: out_destination_dir
+    :sequence_no: 6
+    :caption: Out destination dir
+    :namespaced_name: edi_out_proposals.out_destination_dir
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  transfer_mechanism:
+    :name: transfer_mechanism
+    :sequence_no: 7
+    :caption: Transfer mechanism
+    :namespaced_name: edi_out_proposals.transfer_mechanism
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  organization_code:
+    :name: organization_code
+    :sequence_no: 8
+    :caption: Organization code
+    :namespaced_name: edi_out_proposals.organization_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  hub_address:
+    :name: hub_address
+    :sequence_no: 9
+    :caption: Hub address
+    :namespaced_name: edi_out_proposals.hub_address
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  error_code:
+    :name: error_code
+    :sequence_no: 10
+    :caption: Error code
+    :namespaced_name: edi_errors.error_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  transformer:
+    :name: transformer
+    :sequence_no: 11
+    :caption: Transformer
+    :namespaced_name: edi_errors.transformer
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  action_type:
+    :name: action_type
+    :sequence_no: 12
+    :caption: Action type
+    :namespaced_name: edi_errors.action_type
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  description:
+    :name: description
+    :sequence_no: 13
+    :caption: Description
+    :namespaced_name: edi_errors.description
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+:query_parameter_definitions: []

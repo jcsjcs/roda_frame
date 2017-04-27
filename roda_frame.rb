@@ -40,7 +40,9 @@ class RodaFrame < Roda
   SOME_CONSTANT = 1
 
   use Crossbeams::RackMiddleware::Banner, template: 'views/_page_banner.erb'
-  use Crossbeams::DataminerInterface::App, url_prefix: 'dataminer/', dm_reports_location: '/home/james/ra/roda_frame/reports',
+  # use Crossbeams::DataminerInterface::App, url_prefix: 'dataminer/', dm_reports_location: '/home/james/ra/roda_frame/reports',
+  use Crossbeams::DataminerInterface::App, url_prefix: 'dataminer/',
+    dm_reports_location: File.join(File.dirname(__FILE__), 'reports'),
     dm_js_location: 'js', dm_css_location: 'css', db_connection: DB.base
 
   plugin :render
