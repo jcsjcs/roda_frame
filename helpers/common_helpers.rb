@@ -71,4 +71,13 @@ module CommonHelpers
     qp_hash.to_json
   end
 
+  def current_user
+    return {} unless session[:user_id]
+    UserRepo.new(DB.db).users.by_pk(session[:user_id]).one
+  end
+
+  def can_do_dataminer_admin?
+    current_user[:department_name] == 'IT'
+  end
+
 end

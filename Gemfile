@@ -1,20 +1,22 @@
 source "https://rubygems.org"
 gem "roda", "~> 2.25"
+gem 'rack_csrf'
+gem 'bcrypt'
+gem 'rodauth'
 gem "thin", "~> 1.7"
 gem "awesome_print", "~> 1.7"
 gem "rom", "~> 3.2"
 gem "rom-repository", "~> 1.3"
 gem "rom-sql", "~> 1.2"
 gem 'pg'
-gem 'tilt'
 gem 'sass'
+gem 'tilt'
 
-gem 'crossbeams-dataminer', path: '/home/james/ra/crossbeams/crossbeams-dataminer'
-gem 'crossbeams-layout', path: '/home/james/ra/crossbeams/crossbeams-layout'
-#####gem 'crossbeams-dataminer_portal', path: '/home/james/ra/crossbeams/crossbeams-dataminer_portal'
-gem 'crossbeams-rack_middleware', path: '/home/james/ra/crossbeams/crossbeams-rack_middleware'
-gem 'crossbeams-label_designer', path: '/home/james/ra/crossbeams/crossbeams-label_designer'
-gem 'crossbeams-dataminer_interface', path: '/home/james/ra/crossbeams/crossbeams-dataminer_interface'
+gem 'crossbeams-dataminer',           path: File.expand_path('../../crossbeams/crossbeams-dataminer', __FILE__)
+gem 'crossbeams-layout',              path: File.expand_path('../../crossbeams/crossbeams-layout', __FILE__)
+gem 'crossbeams-rack_middleware',     path: File.expand_path('../../crossbeams/crossbeams-rack_middleware', __FILE__)
+gem 'crossbeams-label_designer',      path: File.expand_path('../../crossbeams/crossbeams-label_designer', __FILE__)
+gem 'crossbeams-dataminer_interface', path: File.expand_path('../../crossbeams/crossbeams-dataminer_interface', __FILE__)
 
-gem 'rerun' # actually just for dev...
 gem 'pry'
+gem 'rerun' # actually just for dev...

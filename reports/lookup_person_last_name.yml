@@ -28,7 +28,7 @@
     :caption: First name
     :namespaced_name: first_name
     :data_type: :string
-    :width: 
+    :width: 50
     :format: 
     :hide: false
     :groupable: false

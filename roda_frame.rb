@@ -1,5 +1,6 @@
 # TODO: Get robocop in from the start....
 require 'roda'
+require 'rodauth'
 require 'awesome_print'
 require 'rom'
 require 'rom-sql'
@@ -10,6 +11,7 @@ require 'crossbeams/dataminer_interface'
 require 'crossbeams/label_designer'
 require 'crossbeams/rack_middleware'
 require 'yaml'
+require 'base64'
 #require 'pry'
 
 Dir['./helpers/**/*.rb'].each { |f| require f }
@@ -37,9 +39,8 @@ DB = DBConnections.new
 class RodaFrame < Roda
   include CommonHelpers
 
-  SOME_CONSTANT = 1
-
-  use Crossbeams::RackMiddleware::Banner, template: 'views/_page_banner.erb'
+  use Rack::Session::Cookie, secret: "some_nice_long_random_string_DSKJH4378EYR7EGKUFH", key: "_myapp_session"
+  use Crossbeams::RackMiddleware::Banner, template: 'views/_page_banner.erb'#, session: request.session
   # use Crossbeams::DataminerInterface::App, url_prefix: 'dataminer/', dm_reports_location: '/home/james/ra/roda_frame/reports',
   use Crossbeams::DataminerInterface::App, url_prefix: 'dataminer/',
     dm_reports_location: File.join(File.dirname(__FILE__), 'reports'),
@@ -53,6 +54,28 @@ class RodaFrame < Roda
   plugin :multi_route
   plugin :content_for, :append=>true
   plugin :indifferent_params
+  plugin :flash
+  plugin :csrf # , :skip => ['POST:/report_error']
+    plugin :rodauth do
+      db DB.base.connection
+      enable :login, :logout#, :change_password
+      logout_route 'a_dummy_route' # Override 'logout' route so that we have control over it.
+      # logout_notice_flash 'Logged out'
+      session_key :user_id
+      login_param 'user_name'
+      login_label 'Login name'
+      login_column :user_name
+      accounts_table :users
+      account_password_hash_column :hashed_password
+      require_bcrypt? false
+      password_match? do |password| # Use legacy password hashing. Maybe change this to modern bcrypt using extra new pwd field?
+        account[:hashed_password] == Base64.encode64(password)
+      end
+      # title_instance_variable :@title
+      # if DEMO_MODE
+      #   before_change_password{r.halt(404)}
+      # end
+    end
   # plugin :error_handler do |e|
   #   # TODO: how to handle AJAX/JSON etc...
   #   view(inline: "An error occurred - #{e.message}") # TODO: refine this to handle certain classes of errors in certain ways.
@@ -66,6 +89,8 @@ class RodaFrame < Roda
   route do |r|
     r.assets unless ENV['RACK_ENV'] == 'production'
     r.public
+    r.rodauth
+    r.redirect('/login') unless session[:user_id]
     r.root do
       # 'At the Root' # If not logged-in, redirect to login?
       # Relations::Users.new.first.inspect
@@ -108,6 +133,12 @@ class RodaFrame < Roda
     r.multi_route
     r.is 'test' do
       view('test_view')
+    end
+
+    r.is 'logout' do
+      rodauth.logout
+      flash[:notice] = 'Logged out'
+      r.redirect('/login')
     end
 
     # TEST Grid:
