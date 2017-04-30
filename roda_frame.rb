@@ -1,4 +1,5 @@
 # TODO: Get robocop in from the start....
+
 require 'roda'
 require 'rodauth'
 require 'awesome_print'
@@ -139,6 +140,16 @@ class RodaFrame < Roda
       rodauth.logout
       flash[:notice] = 'Logged out'
       r.redirect('/login')
+    end
+
+    r.is 'versions' do
+      s = '<h2>Gem Versions</h2><ul><li>'
+      s << [Crossbeams::Layout,
+            Crossbeams::Dataminer,
+            Crossbeams::LabelDesigner,
+            Crossbeams::RackMiddleware].map { |k| "#{k}: #{k.const_get('VERSION')}" }.join('</li><li>')
+      s << '</li></ul>'
+      view(inline: s)
     end
 
     # TEST Grid:
