@@ -1,8 +1,6 @@
 Dir['./lib/masterfiles/fruit_and_packing/**/*.rb'].each { |f| require f }
 class RodaFrame < Roda
   route 'fruit_and_packing', 'masterfiles' do |r|
-    # 'From Masterfiles | Fruit AND Packing'
-    # 'From Finance | Payment Terms' # If url has no '/'
     # --- see empty root plugin...
     r.on 'commodities' do
       r.root do
@@ -18,20 +16,21 @@ class RodaFrame < Roda
         view(inline: 'COMM.create - should not be GET')
       end
       r.on :id do |id|
-        r.root do
-          'SHOW'
-        end
+        # r.get true do
+        #   'SHOW'
+        # end
         r.on 'edit' do
           show_page { Masterfiles::FruitAndPacking::Commodities::Edit.call(id) }
         end
-        r.on 'update' do
-          view(inline: 'COMM UPDATE - should not be GET')
+        r.post 'update' do
+          view(inline: 'COMM UPDATE')
         end
         r.on 'delete' do
-          view(inline: 'COMM DELETE - should not be GET')
+          view(inline: 'COMM DELETE')
         end
       end
     end
+
     r.on 'varieties' do
       r.root do
         view(inline: 'VARIETIES.index')

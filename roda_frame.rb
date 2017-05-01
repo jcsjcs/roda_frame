@@ -56,7 +56,7 @@ class RodaFrame < Roda
   plugin :content_for, :append=>true
   plugin :indifferent_params
   plugin :flash
-  plugin :csrf # , :skip => ['POST:/report_error']
+  plugin :csrf, raise: true # , :skip => ['POST:/report_error']
     plugin :rodauth do
       db DB.base.connection
       enable :login, :logout#, :change_password

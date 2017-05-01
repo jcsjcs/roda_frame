@@ -3,6 +3,7 @@ module CommonHelpers
   # - The block must return a Crossbeams::Layout::Page
   def show_page(&block)
     @layout = block.yield
+    @layout.add_csrf_tag(csrf_tag)
     view('crossbeams_layout_page')
   end
 

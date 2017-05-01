@@ -4,6 +4,7 @@ PATH
     crossbeams-dataminer_interface (0.1.0)
       axlsx
       crossbeams-dataminer
+      crossbeams-layout
       roda (~> 2.25)
       rouge
 
