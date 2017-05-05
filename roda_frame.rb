@@ -47,7 +47,12 @@ class RodaFrame < Roda
     dm_reports_location: File.join(File.dirname(__FILE__), 'reports'),
     dm_js_location: 'js', dm_css_location: 'css', db_connection: DB.base
 
-  plugin :data_grid, path: File.dirname(__FILE__), list_url: '/list/{id}/grid'
+  plugin :data_grid, path: File.dirname(__FILE__),
+                     list_url: '/list/%s/grid',
+                     search_url: '/search/%s/grid',
+                     filter_url: '/search/%s',
+                     run_search_url: '/search/%s/run',
+                     run_to_excel_url: '/search/%s/xls'
   plugin :render
   plugin :partials
   plugin :assets, css: 'style.scss'#, js: 'behave.js'
@@ -237,6 +242,28 @@ class RodaFrame < Roda
         r.on 'grid' do
           response['Content-Type'] = 'application/json'
           render_data_grid_rows(id)
+        end
+      end
+    end
+
+    # Generic code for grid searches.
+    r.on 'search' do
+      r.on :id do |id|
+        r.is do
+          render_search_filter(id, params)
+        end
+
+        r.on 'run' do
+          show_page { render_search_grid_page(id, params) }
+        end
+
+        r.on 'grid' do
+          response['Content-Type'] = 'application/json'
+          render_search_grid_rows(id, params)
+        end
+
+        r.on 'xls' do
+          "NOT YET IMPLEMENTED - id: #{id}"
         end
       end
     end
