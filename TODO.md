@@ -36,3 +36,10 @@ Possibility of using boolean matchers to handle authorization:
 Must have csrf for rodauth to work, but then all other forms need to include csrf tag.
 Roda plugin has csrf_tag method, but then it needs to be passed to our view code so it can be passed to the Crossbeams::Layout for rendering.
 Implemented in show_page helper.
+
+# Searching
+
+* Move helpers into the data_grid plugin.
+* Use plugin for dm portal too?
+* JS...
+

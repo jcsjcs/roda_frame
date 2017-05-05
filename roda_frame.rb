@@ -24,7 +24,6 @@ require './repositories/commodity_repo'
 # require './repositories/payment_term_repo'
 require './repositories/warehouse/book_repo' # pretend warehouse repo.
 require './lib/db_connections'
-require './lib/dataminer_control'
 # require './models'
 
 
@@ -263,7 +262,23 @@ class RodaFrame < Roda
         end
 
         r.on 'xls' do
-          "NOT YET IMPLEMENTED - id: #{id}"
+          begin
+            caption, xls = render_excel_rows(id, params)
+            response.headers['content_type'] = "application/vnd.ms-excel"
+            response.headers['Content-Disposition'] = "attachment; filename=\"#{caption.strip.gsub(/[\/:*?"\\<>\|\r\n]/i, '-') + '.xls'}\""
+            response.write(xls) # NOTE: could this use streaming to start downloading quicker?
+
+          rescue Sequel::DatabaseError => e
+            view(inline: <<-EOS)
+            <p style='color:red;'>There is a problem with the SQL definition of this report:</p>
+            <p>Report: <em>#{caption}</em></p>The error message is:
+            <pre>#{e.message}</pre>
+            <button class="pure-button" onclick="crossbeamsUtils.toggle_visibility('sql_code', this);return false">
+              <i class="fa fa-info"></i> Toggle SQL
+            </button>
+            <pre id="sql_code" style="display:none;"><%= sql_to_highlight(@rpt.runnable_sql) %></pre>
+            EOS
+          end
         end
       end
     end
