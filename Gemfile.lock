@@ -33,6 +33,14 @@ PATH
       erubis
       rack
 
+PATH
+  remote: /home/james/ra/crossbeams/roda-data_grid
+  specs:
+    roda-data_grid (0.1.0)
+      crossbeams-dataminer
+      crossbeams-layout
+      roda (~> 2.5)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -157,6 +165,7 @@ DEPENDENCIES
   rack_csrf
   rerun
   roda (~> 2.25)
+  roda-data_grid!
   rodauth
   rom (~> 3.2)
   rom-repository (~> 1.3)

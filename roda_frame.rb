@@ -47,6 +47,7 @@ class RodaFrame < Roda
     dm_reports_location: File.join(File.dirname(__FILE__), 'reports'),
     dm_js_location: 'js', dm_css_location: 'css', db_connection: DB.base
 
+  plugin :data_grid, path: File.dirname(__FILE__), list_url: '/list/{id}/grid'
   plugin :render
   plugin :partials
   plugin :assets, css: 'style.scss'#, js: 'behave.js'
@@ -56,7 +57,7 @@ class RodaFrame < Roda
   plugin :content_for, :append=>true
   plugin :indifferent_params
   plugin :flash
-  plugin :csrf, raise: true # , :skip => ['POST:/report_error']
+  plugin :csrf, raise: true # , :skip => ['POST:/report_error'] # FIXME: Remove the +raise+ param when going live!
     plugin :rodauth do
       db DB.base.connection
       enable :login, :logout#, :change_password
@@ -225,6 +226,19 @@ class RodaFrame < Roda
 
       view('crossbeams_layout_page')
     end
-  end
 
+    # Generic grid lists.
+    r.on 'list' do
+      r.on :id do |id|
+        r.is do
+          show_page { render_data_grid_page(id) }
+        end
+
+        r.on 'grid' do
+          response['Content-Type'] = 'application/json'
+          render_data_grid_rows(id)
+        end
+      end
+    end
+  end
 end

@@ -17,6 +17,7 @@ gem 'crossbeams-layout',              path: File.expand_path('../../crossbeams/c
 gem 'crossbeams-rack_middleware',     path: File.expand_path('../../crossbeams/crossbeams-rack_middleware', __FILE__)
 gem 'crossbeams-label_designer',      path: File.expand_path('../../crossbeams/crossbeams-label_designer', __FILE__)
 gem 'crossbeams-dataminer_interface', path: File.expand_path('../../crossbeams/crossbeams-dataminer_interface', __FILE__)
+gem 'roda-data_grid',                 path: File.expand_path('../../crossbeams/roda-data_grid', __FILE__)
 
 gem 'pry'
 gem 'rerun' # actually just for dev...
