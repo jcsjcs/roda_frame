@@ -4,6 +4,7 @@
 <form action='<%= "/search/#{presenter.rpt_id}/run" %>' id="rp_form" method=post class="crossbeams-form"
   onsubmit="crossbeamsDataMinerParams.storeCurrentParams('<%=presenter.rpt_id%>'); crossbeamsUtils.addJSONVarToForm('rp_form', crossbeamsDataMinerParams.current_values);">
   <input type="hidden" name="id" value="<%=presenter.rpt_id%>">
+  <%= csrf_tag %>
   <div class="crossbeams-row">
     <div class="crossbeams-col">
       <div class="crossbeams-field">
@@ -27,7 +28,7 @@
 
       <div class="crossbeams-actions">
         <input type="submit" name="btnSubmit" value="Run report" data-disable-with="Run report" class="white bg-green br2 dim pa3 ba b--near-white">
-        <button type='submit' id="run_excel" name="btnSubmit" formaction="<%#= routes.searchrunxls_path %>" data-disable-with="Create Excel report" class="near-white bg-green br2 dim pa3 ml4 ba b--near-white"><i class="fa fa-file-excel-o"></i> Download Excel report</button>
+        <button disabled="disabled" type='submit' id="run_excel" name="btnSubmit" formaction="<%#= routes.searchrunxls_path %>" data-disable-with="Create Excel report" class="near-white bg-green br2 dim pa3 ml4 ba b--near-white disabled"><i class="fa fa-file-excel-o"></i> Download Excel report</button>
       </div>
     </div>
   </div>

@@ -4,19 +4,6 @@ module Masterfiles
       class Edit
         def self.call(id) # TODO: handle re-display on validation error...
 
-# commodities.id
-# commodity_code
-# commodity_description_short
-# commodity_description_long
-# commodity_group_id
-# commodities.commodity_group_code
-# commodity_groups.commodity_group_description
-# carton_fruit_standard_mass
-# rebins_default_size
-# bin_fruit_standard_mass
-# ps_standard_mass
-# grower_commitment_required
-
           this_repo = CommodityRepo.new(DB.db)
           obj     = this_repo.commodities.by_pk(id).one
           rules = { fields: {

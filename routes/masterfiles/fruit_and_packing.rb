@@ -23,7 +23,12 @@ class RodaFrame < Roda
           show_page { Masterfiles::FruitAndPacking::Commodities::Edit.call(id) }
         end
         r.post 'update' do
-          view(inline: 'COMM UPDATE')
+          # TODO:
+          # - valdate params
+          # - update database
+          # - redirect somewhere (list/view/next step)
+          # - OR re-display edit with errors
+          view(inline: "COMM UPDATE<p>#{params.inspect}</p>")
         end
         r.on 'delete' do
           view(inline: 'COMM DELETE')

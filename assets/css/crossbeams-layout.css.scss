@@ -119,7 +119,7 @@ input, textarea, select {
   /*align-items: center; */
 }
 
-label {
+.crossbeams-form label {
   order: 1;
   width: 10em;
   text-align: right;
@@ -129,19 +129,19 @@ label {
   cursor: pointer;
 }
 
-input, textarea, select {
+.crossbeams-form input, .crossbeams-form textarea, .crossbeams-form select {
   order: 2;
   flex: 1 1 auto;
 }
 
-input[type="checkbox"], input[type="radio"] {
+.crossbeams-form input[type="checkbox"], .crossbeams-form input[type="radio"] {
   order: 1;
   flex: none;
   width: auto;
   margin-left: 10em;
 }
 
-input[type="checkbox"] ~ label, input[type="radio"] ~ label {
+.crossbeams-form input[type="checkbox"] ~ label, .crossbeams-form input[type="radio"] ~ label {
   width: auto;
   text-align: left;
   padding-left: 0.4em;
@@ -149,12 +149,12 @@ input[type="checkbox"] ~ label, input[type="radio"] ~ label {
 
 
 
-/* label state styles */
-input:focus ~ label, textarea:focus ~ label, select:focus ~ label {
+/* label state styles - relies on label placed after input in form...*/
+.crossbeams-form input:focus ~ label, .crossbeams-form textarea:focus ~ label, .crossbeams-form select:focus ~ label {
   color: darkcyan;
 }
 
-input:checked ~ label {
+.crossbeams-form input:checked ~ label {
   font-weight: bold;
 }
 /* RESPONSIVE */

@@ -177,6 +177,27 @@ var crossbeamsDataMinerParams = {
     }
   },
 
+  applyDefaultValues: function(query_params) {
+  // for(qp in query_params) { if(query_params[qp].hasOwnProperty('default_value')) { console.log(query_params[qp]['default_value']); } }
+    var choice = {};
+    var elem;
+    for(qp in query_params) {
+      if(query_params[qp].default_value) {
+        // console.log(query_params[qp]['default_value']);
+        elem = query_params[qp];
+        choice.col    = elem.column;
+        choice.op     = '=';
+        choice.opText = 'is';
+        choice.val    = elem.default_value;
+        choice.text   = elem.default_value;
+        choice.val_to = '';
+        choice.text_to = '';
+        choice.caption  = elem.caption;
+        this.current_values.push(choice);
+      }
+    }
+  },
+
   init: function(form_id, rpt_id, qprm) {
     var observer;
     this.formId       = form_id;
@@ -227,6 +248,9 @@ var crossbeamsDataMinerParams = {
             // event.stopPropagation();
             // event.preventDefault();
     });
+
+    // Apply default parameter values.
+    crossbeamsDataMinerParams.applyDefaultValues(crossbeamsDataMinerParams.query_params);
 
     crossbeamsDataMinerParams.displayParamsAsText();
 
