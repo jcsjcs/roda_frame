@@ -17,17 +17,22 @@ module CommonHelpers
     end.join("\n")
   end
 
-  # def current_user
-  #   @user ||= User[ session[:user_id] ]
-  # end
-
   def current_user
-    return {} unless session[:user_id]
-    UserRepo.new(DB.db).users.by_pk(session[:user_id]).one
+    return nil unless session[:user_id]
+    @current_user ||= UserRepo.new(DB.db).users.by_pk(session[:user_id]).one
+  end
+
+  def authorised?(programs, sought_permission)
+    return false unless current_user
+    prog_repo = ProgramRepo.new(DB.db)
+    prog_repo.authorise?(current_user, Array(programs), sought_permission)
   end
 
   def can_do_dataminer_admin?
-    current_user[:department_name] == 'IT'
+    # TODO: what decides that user can do admin? security role on dm program?
+    # program + user -> program_users -> security_group -> security_permissions
+    current_user && authorised?(:data_miner, :admin)
+    # current_user # && current_user[:department_name] == 'IT'
   end
 
 end

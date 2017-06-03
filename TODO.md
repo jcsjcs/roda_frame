@@ -43,3 +43,20 @@ Implemented in show_page helper.
 * Use plugin for dm portal too?
 * JS...
 
+# To create a new user via the console:
+
+`bin/console`
+
+~~~{.ruby}
+require 'bcrypt'
+
+usr_hash = {login_name: 'james',
+            user_name: 'James Silberbauer',
+            password_hash: BCrypt::Password.create(pass).to_s,
+            created_at: Time.now,
+            updated_at: Time.now
+            }
+
+user_repo.create(usr_hash)
+~~~
+

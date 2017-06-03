@@ -1,7 +1,7 @@
-   <% if session[:user_id] %>
+   <% if current_user %>
       <nav class="db dtc-ns v-mid w-100 tl tr-ns mt2 mt0-ns">
         <a href="/logout" class="f6 fw6 hover-blue link black-70 ml3 mr2 mr3-m mr4-l dib" title="Logout">logout</a>
-        <span class="ml2 mr2"><%= current_user.first_name %> <%= current_user.last_name %> (<%= current_user.department_name %>)</span>
+        <span class="ml2 mr2"><%= current_user.user_name %> (<%#= current_user.department_name %>)</span>
       </nav>
     <% end %>
 
@@ -21,8 +21,8 @@
             <li><a href="/search/commodities">Search</a></li>
           </ul>
         </li>
-        <li><a href="/search/users">Search Users</a></li>
-        <li><a href="/list/active_users">Active Users</a></li>
+        <li><a href="/search/users">Users</a></li>
+        <li><a href="/list/active_users">Active</a></li>
         <!--
         <li>
           <a href="#" id="menuLink1">Payment Terms</a>
@@ -33,7 +33,7 @@
           </ul>
         </li> -->
         <li>
-          <a href="#" id="menuLink2">Label Designer</a>
+          <a href="#" id="menuLink2">Label</a>
           <ul>
             <li><a href="/label_designer/new">New</a></li>
             <li><a href="/label_designer/blue">Existing 1</a></li>
@@ -42,7 +42,7 @@
         </li>
         <li><a href="/dataminer/">Dataminer</a></li>
         <% if can_do_dataminer_admin? %>
-          <li><a href="/dataminer/admin/">Dataminer Admin</a></li>
+          <li><a href="/dataminer/admin/">DM Admin</a></li>
         <% end %>
         <li><a href="/list/voyages">Voyages</a></li>
       </ul>

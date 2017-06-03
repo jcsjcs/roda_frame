@@ -1,4 +1,4 @@
-# TODO: Get robocop in from the start....
+# TODO: Get rubocop in from the start....
 
 require 'roda'
 require 'rodauth'
@@ -20,6 +20,9 @@ Dir['./helpers/**/*.rb'].each { |f| require f }
 # Dir['./persistence/**/*.rb'].each { |f| puts f }
 require './repositories/user_repo'
 require './repositories/commodity_repo'
+require './repositories/functional_area_repo'
+require './repositories/program_repo'
+require './repositories/program_function_repo'
 # require './repositories/supplier_invoice_repo'
 # require './repositories/payment_term_repo'
 require './repositories/warehouse/book_repo' # pretend warehouse repo.
@@ -68,15 +71,15 @@ class RodaFrame < Roda
       logout_route 'a_dummy_route' # Override 'logout' route so that we have control over it.
       # logout_notice_flash 'Logged out'
       session_key :user_id
-      login_param 'user_name'
+      login_param 'login_name' # 'user_name'
       login_label 'Login name'
-      login_column :user_name
+      login_column :login_name # :user_name
       accounts_table :users
-      account_password_hash_column :hashed_password
-      require_bcrypt? false
-      password_match? do |password| # Use legacy password hashing. Maybe change this to modern bcrypt using extra new pwd field?
-        account[:hashed_password] == Base64.encode64(password)
-      end
+      account_password_hash_column :password_hash # :hashed_password (This is old base64 version)
+      # require_bcrypt? false
+      # password_match? do |password| # Use legacy password hashing. Maybe change this to modern bcrypt using extra new pwd field?
+      #   account[:hashed_password] == Base64.encode64(password)
+      # end
       # title_instance_variable :@title
       # if DEMO_MODE
       #   before_change_password{r.halt(404)}
@@ -95,8 +98,11 @@ class RodaFrame < Roda
   route do |r|
     r.assets unless ENV['RACK_ENV'] == 'production'
     r.public
+
     r.rodauth
-    r.redirect('/login') unless session[:user_id]
+    rodauth.require_authentication
+    r.redirect('/login') if current_user.nil? # Session might have the incorrect user_id
+
     r.root do
       # 'At the Root' # If not logged-in, redirect to login?
       # Relations::Users.new.first.inspect

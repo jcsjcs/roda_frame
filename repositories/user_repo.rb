@@ -1,6 +1,8 @@
 require 'rom-repository'
 
 class UserRepo < ROM::Repository[:users]
+  commands :create
+
   def query(conditions)
     users.where(conditions)
   end
