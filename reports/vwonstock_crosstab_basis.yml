@@ -1,0 +1,148 @@
+---
+:caption: Crosstab basis from VW onstock pallets
+:sql: "SELECT organization_code, commodity_code, marketing_variety_code, fg_code_old,\r\ngrade_code,\r\nCOUNT(pallet_number)
+  AS no_pallets\r\nFROM vwonstock_pallets\r\nGROUP BY organization_code,
+  commodity_code, marketing_variety_code, fg_code_old, grade_code\r\nORDER BY organization_code,
+  commodity_code, marketing_variety_code, fg_code_old, grade_code\r\n"
+:limit: 
+:offset: 
+:columns:
+  organization_code:
+    :name: organization_code
+    :sequence_no: 1
+    :caption: Organization code
+    :namespaced_name: organization_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: true
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  commodity_code:
+    :name: commodity_code
+    :sequence_no: 2
+    :caption: Commodity code
+    :namespaced_name: commodity_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: true
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  marketing_variety_code:
+    :name: marketing_variety_code
+    :sequence_no: 3
+    :caption: Marketing variety code
+    :namespaced_name: marketing_variety_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: true
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  fg_code_old:
+    :name: fg_code_old
+    :sequence_no: 4
+    :caption: Fg code old
+    :namespaced_name: fg_code_old
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: true
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  grade_code:
+    :name: grade_code
+    :sequence_no: 5
+    :caption: Grade code
+    :namespaced_name: grade_code
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: true
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  no_pallets:
+    :name: no_pallets
+    :sequence_no: 6
+    :caption: No pallets
+    :namespaced_name: 
+    :data_type: :integer
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: true
+    :group_avg: true
+    :group_min: true
+    :group_max: true
+:query_parameter_definitions:
+- :column: vwonstock_pallets.build_status
+  :caption: Build status
+  :data_type: :string
+  :control_type: :list
+  :default_value: 
+  :ordered_list: false
+  :ui_priority: 1
+  :list_def:
+  - PARTIAL
+  - FULL
+  - partial
+- :column: vwonstock_pallets.packed_by
+  :caption: Packed by
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: vwonstock_pallets.load_number
+  :caption: Load number
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+- :column: vwonstock_pallets.old_pack_code
+  :caption: Old pack code
+  :data_type: :string
+  :control_type: :text
+  :default_value: 
+  :ordered_list: 
+  :ui_priority: 1
+  :list_def: 
+:crosstab:
+  :row_columns:
+  - organization_code
+  - commodity_code
+  - marketing_variety_code
+  - fg_code_old
+  :column_columns:
+  - grade_code:
+      :sql: SELECT DISTINCT grade_code FROM pallets ORDER BY 1
+      :apply_report_where_clause: false
+  :value_columns:
+  - no_pallets:
+      :data_type: :integer

@@ -20,4 +20,8 @@ gem 'crossbeams-dataminer_interface', path: File.expand_path('../../crossbeams/c
 gem 'roda-data_grid',                 path: File.expand_path('../../crossbeams/roda-data_grid', __FILE__)
 
 gem 'pry'
+gem 'pry-doc'
+gem 'pry-clipboard'
+gem 'pry-byebug'
 gem 'rerun' # actually just for dev...
+gem 'rack-console'
