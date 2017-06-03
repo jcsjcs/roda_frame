@@ -1,10 +1,13 @@
 ---
 :caption: Users report
-:sql: "SELECT users.id, users.user_name, people.title,\r\npeople.first_name, people.last_name,\r\nparties.party_name,\r\nusers.created_at,
+:old_sql: "SELECT users.id, users.user_name, people.title,\r\npeople.first_name, people.last_name,\r\nparties.party_name,\r\nusers.created_at,
   users.updated_at, \r\nusers.email_address,\r\ndepartments.department_name\r\nFROM
   users\r\nJOIN people ON people.id = users.person_id\r\nJOIN parties ON parties.id
   = people.party_id\r\nJOIN departments ON departments.id = users.department_id\r\nORDER
   BY departments.department_name, people.last_name, people.first_name"
+:sql: "SELECT users.id, users.user_name, users.login_name,\r\nusers.created_at,
+  users.updated_at, \r\nusers.email,\r\nFROM
+  users"
 :limit: 
 :offset: 
 :columns:
@@ -162,7 +165,7 @@
 - :column: users.department_id
   :caption: Department
   :data_type: :integer
-  :control_type: :list
+  :control_type: :text
   :default_value: 
   :ordered_list: 44
   :ui_priority: 1
@@ -170,7 +173,7 @@
 - :column: parties.party_name
   :caption: Party
   :data_type: :string
-  :control_type: :list
+  :control_type: :text
   :default_value: 
   :ordered_list: 31
   :ui_priority: 1
@@ -178,7 +181,7 @@
 - :column: users.id
   :caption: User ID
   :data_type: :integer
-  :control_type: :list
+  :control_type: :text
   :default_value: 
   :ordered_list: false
   :ui_priority: 1

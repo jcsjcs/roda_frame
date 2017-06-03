@@ -1,11 +1,13 @@
 ---
 :caption: A List of Users
-:sql: "SELECT users.id, users.user_name, people.title, people.first_name, people.last_name,
+:old_sql: "SELECT users.id, users.user_name, people.title, people.first_name, people.last_name,
   parties.party_name, users.created_at,\r\n  users.updated_at,  users.email_address,
   departments.department_name FROM\r\n  users JOIN people ON people.id = users.person_id
   JOIN parties ON parties.id\r\n  = people.party_id JOIN departments ON departments.id
   = users.department_id ORDER\r\n  BY departments.department_name, people.last_name,
   people.first_name"
+:sql: "SELECT users.id, users.user_name, users.login_name,\r\nusers.created_at,
+  users.updated_at, \r\nusers.email\r\nFROM users"
 :limit: 
 :offset: 
 :columns:
@@ -39,66 +41,66 @@
     :group_avg: false
     :group_min: false
     :group_max: false
-  title:
-    :name: title
-    :sequence_no: 3
-    :caption: Title
-    :namespaced_name: people.title
-    :data_type: :string
-    :width: 
-    :format: 
-    :hide: false
-    :groupable: true
-    :group_by_seq: 
-    :group_sum: false
-    :group_avg: false
-    :group_min: false
-    :group_max: false
-  first_name:
-    :name: first_name
-    :sequence_no: 4
-    :caption: First name
-    :namespaced_name: people.first_name
-    :data_type: :string
-    :width: 
-    :format: 
-    :hide: false
-    :groupable: true
-    :group_by_seq: 
-    :group_sum: false
-    :group_avg: false
-    :group_min: false
-    :group_max: false
-  last_name:
-    :name: last_name
-    :sequence_no: 5
-    :caption: Last name
-    :namespaced_name: people.last_name
-    :data_type: :string
-    :width: 
-    :format: 
-    :hide: false
-    :groupable: true
-    :group_by_seq: 
-    :group_sum: false
-    :group_avg: false
-    :group_min: false
-    :group_max: false
-  party_name:
-    :name: party_name
-    :sequence_no: 6
-    :caption: Party name
-    :namespaced_name: parties.party_name
-    :data_type: :string
-    :width: 
-    :format: 
-    :hide: false
-    :groupable: true
-    :group_by_seq: 
-    :group_sum: false
-    :group_avg: false
-    :group_min: false
-    :group_max: false
+  # title:
+  #   :name: title
+  #   :sequence_no: 3
+  #   :caption: Title
+  #   :namespaced_name: people.title
+  #   :data_type: :string
+  #   :width: 
+  #   :format: 
+  #   :hide: false
+  #   :groupable: true
+  #   :group_by_seq: 
+  #   :group_sum: false
+  #   :group_avg: false
+  #   :group_min: false
+  #   :group_max: false
+  # first_name:
+  #   :name: first_name
+  #   :sequence_no: 4
+  #   :caption: First name
+  #   :namespaced_name: people.first_name
+  #   :data_type: :string
+  #   :width: 
+  #   :format: 
+  #   :hide: false
+  #   :groupable: true
+  #   :group_by_seq: 
+  #   :group_sum: false
+  #   :group_avg: false
+  #   :group_min: false
+  #   :group_max: false
+  # last_name:
+  #   :name: last_name
+  #   :sequence_no: 5
+  #   :caption: Last name
+  #   :namespaced_name: people.last_name
+  #   :data_type: :string
+  #   :width: 
+  #   :format: 
+  #   :hide: false
+  #   :groupable: true
+  #   :group_by_seq: 
+  #   :group_sum: false
+  #   :group_avg: false
+  #   :group_min: false
+  #   :group_max: false
+  # party_name:
+  #   :name: party_name
+  #   :sequence_no: 6
+  #   :caption: Party name
+  #   :namespaced_name: parties.party_name
+  #   :data_type: :string
+  #   :width: 
+  #   :format: 
+  #   :hide: false
+  #   :groupable: true
+  #   :group_by_seq: 
+  #   :group_sum: false
+  #   :group_avg: false
+  #   :group_min: false
+  #   :group_max: false
   created_at:
     :name: created_at
     :sequence_no: 7
@@ -129,8 +131,8 @@
     :group_avg: false
     :group_min: false
     :group_max: false
-  email_address:
-    :name: email_address
+  email:
+    :name: email
     :sequence_no: 9
     :caption: Email address
     :namespaced_name: users.email_address
@@ -144,21 +146,21 @@
     :group_avg: false
     :group_min: false
     :group_max: false
-  department_name:
-    :name: department_name
-    :sequence_no: 10
-    :caption: Department name
-    :namespaced_name: departments.department_name
-    :data_type: :string
-    :width: 
-    :format: 
-    :hide: false
-    :groupable: true
-    :group_by_seq: 
-    :group_sum: false
-    :group_avg: false
-    :group_min: false
-    :group_max: false
+  # department_name:
+  #   :name: department_name
+  #   :sequence_no: 10
+  #   :caption: Department name
+  #   :namespaced_name: departments.department_name
+  #   :data_type: :string
+  #   :width: 
+  #   :format: 
+  #   :hide: false
+  #   :groupable: true
+  #   :group_by_seq: 
+  #   :group_sum: false
+  #   :group_avg: false
+  #   :group_min: false
+  #   :group_max: false
 :query_parameter_definitions:
 - :column: users.department_id
   :caption: Department

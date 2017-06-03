@@ -37,7 +37,7 @@
         width: 150px;
     }
     .full-width-grid {
-        margin-left: 150px;
+        /* margin-left: 150px; */
         padding-top: 25px;
         box-sizing: border-box;
         display: block;
@@ -46,7 +46,7 @@
     .full-width-grid-toolbar {
         top: 4px;
         left: 30px;
-        margin-left: 150px;
+        /* margin-left: 150px; */
         display: block;
         position: absolute;
     }
@@ -1489,6 +1489,8 @@ var twoRowData =
 
     //hs = {id: row['program_id'], functional_area_name: row['functional_area_name'], program_name: row['program_name'], active: row['p_active'], created_at: row['p_created_at'], updated_at: row['updated_at'],
 var masterColumnDefs = [
+  {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'/edit|edit'","colId":"link_0","cellRenderer":crossbeamsGridFormatters.hrefSimpleFormatter},
+  {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'|delete|Are you sure?'","colId":"link_1","cellRenderer":crossbeamsGridFormatters.hrefPromptFormatter},
   {headerName: 'Functional Area', field: 'functional_area_name',
     // left column is going to act as group column, with the expand / contract controls
     cellRenderer: 'group',
@@ -1503,6 +1505,8 @@ var masterColumnDefs = [
   {headerName: 'Updated', field:'updated_at'}
 ];
 var midLevelColumnDefs = [
+  {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'/edit|edit'","colId":"link_0","cellRenderer":crossbeamsGridFormatters.hrefSimpleFormatter},
+  {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'|delete|Are you sure?'","colId":"link_1","cellRenderer":crossbeamsGridFormatters.hrefPromptFormatter},
   {headerName: 'Program', field: 'program_name',
     // left column is going to act as group column, with the expand / contract controls
     cellRenderer: 'group',
@@ -1519,6 +1523,8 @@ var midLevelColumnDefs = [
 
   // nh = {id: row['id'], program_function_name: row['program_function_name'], group_name: row['group_name'], url: row['url'], program_function_sequence: row['program_function_sequence'],
 var detailColumnDefs = [
+  {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'/edit|edit'","colId":"link_0","cellRenderer":crossbeamsGridFormatters.hrefSimpleFormatter},
+  {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'|delete|Are you sure?'","colId":"link_1","cellRenderer":crossbeamsGridFormatters.hrefPromptFormatter},
   {headerName: 'Program function name', field: 'program_function_name'},
   {headerName: 'ID', field: 'id', cellClass: 'grid-number-column'},
   {headerName: 'Group', field: 'group_name'},
@@ -1593,11 +1599,9 @@ MidLevelPanelCellRenderer.prototype.getTemplate = function(params) {
 
   var template =
     '<div class="full-width-panel">' +
-    '  <div class="full-width-details">' +
-    '    <div class="full-width-detail"><b>Func: </b>'+parentRecord.functional_area_name+'</div>' +
-    '  </div>'+
     '  <div class="full-width-grid" style="height:100%"></div>' +
     '  <div class="full-width-grid-toolbar">' +
+    '       <b>Functional area: </b>'+parentRecord.functional_area_name +
     '       <input class="full-width-search" placeholder="Search..."/>' +
     '       <button>Add a Program</button>' +
     '  </div>'+
@@ -1689,11 +1693,9 @@ DetailPanelCellRenderer.prototype.getTemplate = function(params) {
 
   var template =
     '<div class="full-width-panel">' +
-    '  <div class="full-width-details">' +
-    '    <div class="full-width-detail"><b>Prog: </b>'+parentRecord.program_name+'</div>' +
-    '  </div>'+
     '  <div class="full-width-grid" style="height:100%"></div>' +
     '  <div class="full-width-grid-toolbar">' +
+    '       <b>Program: </b>'+parentRecord.program_name +
     '       <input class="full-width-search" placeholder="Search..."/>' +
     '       <button>Add a Program Function</button>' +
     '  </div>'+
