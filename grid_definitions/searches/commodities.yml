@@ -1,9 +1,9 @@
 ---
 :dataminer_definition: commodities
 :actions:
-  - :url: /masterfiles/fruit_and_packing/commodities/{:id}/edit
+  - :url: /masterfiles/fruit_and_packing/commodities/$:id$/edit
     :text: edit
-  - :url: /masterfiles/fruit_and_packing/commodities/{:id}
+  - :url: /masterfiles/fruit_and_packing/commodities/$:id$
     :text: delete
     :is_delete: true
 

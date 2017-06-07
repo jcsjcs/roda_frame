@@ -20,6 +20,19 @@ var crossbeamsUtils = {
         }
     },
 
+    /**
+     * confirm() Shows a SweetAlert2 dialog asking the user to confirm or cancel.
+     * @param ...
+     */
+    confirm: function ({prompt, title, okFunc, cancelFunc}) {
+      console.log(title);
+      swal({
+        title: title === undefined ? '' : title,
+        text: prompt,
+        type: 'warning',
+        showCancelButton: true}).then(okFunc, cancelFunc).catch(swal.noop);
+    },
+
     getCharCodeFromEvent: function (event) {
         event = event || window.event;
         return (event.which === "undefined")

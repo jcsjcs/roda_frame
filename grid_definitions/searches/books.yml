@@ -1,9 +1,9 @@
 ---
 :dataminer_definition: book_index
 :actions:
-  - :url: /books/{:id}/edit
+  - :url: /books/$:id$/edit
     :text: edit
-  - :url: /books/{:id}
+  - :url: /books/$:id$
     :text: delete
     :is_delete: true
 

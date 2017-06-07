@@ -150,6 +150,36 @@ var crossbeamsGridFormatters = {
     return '<b>' + params.value.toUpperCase() + '</b>';
   },
 
+  menuActionsRenderer: function (params) {
+    // params value should always be an array.
+    // if empty, render ''
+    console.log('parm', params);
+    let valueObj = params.value;
+    if(valueObj === undefined || valueObj === null) {
+      valueObj = params.valueGetter();
+    }
+    console.log('vO', valueObj);
+    if(valueObj.length === 0) { return ''; }
+    let items = [];
+    let url_components;
+    let url;
+    valueObj.forEach(function(item) {
+      url_components = item.url.split("$");
+      url = "";
+      url_components.forEach(function(cmp, index) {
+       if(index % 2 == 0) {
+          url += cmp;
+        } else {
+          url += params.data[item[cmp]];
+        }
+      });
+      console.log('t1',item.title);
+      items.push({name: item.text, url: url, prompt: item.prompt, method: item.method, title: item.title});
+    });
+    console.log(JSON.stringify(items));
+    return "<button class='grid-context-menu' data-row='"+JSON.stringify(items)+"'>list</button>";
+  },
+
   // Return a number with thousand separator and at least 2 digits after the decimal.
   numberWithCommas2: function (params) {
     var x = params.value;
@@ -295,6 +325,9 @@ NumericCellEditor.prototype.isPopup = function () {
           //newCol[attr] = eval(col[attr]);
           if(col[attr] ==='crossbeamsGridFormatters.testRender') {
             newCol[attr] = crossbeamsGridFormatters.testRender;
+          }
+          if(col[attr] ==='crossbeamsGridFormatters.menuActionsRenderer') {
+            newCol[attr] = crossbeamsGridFormatters.menuActionsRenderer;
           }
           if(col[attr] ==='crossbeamsGridFormatters.numberWithCommas2') {
             newCol[attr] = crossbeamsGridFormatters.numberWithCommas2;

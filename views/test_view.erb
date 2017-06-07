@@ -15,7 +15,7 @@
 
     .full-width-panel {
         position: relative;
-        background: #fafafa;
+        background: beige; /* #fafafa; */
         height: 100%;
         width: 100%;
         padding: 5px;
@@ -37,14 +37,14 @@
         width: 150px;
     }
     .full-width-grid {
-        /* margin-left: 150px; */
-        padding-top: 25px;
+         margin-left: 100px; 
+        padding-top: 35px;
         box-sizing: border-box;
         display: block;
         height: 100%;
     }
     .full-width-grid-toolbar {
-        top: 4px;
+        top: 8px;
         left: 30px;
         /* margin-left: 150px; */
         display: block;
@@ -57,8 +57,58 @@
         border: 1px solid #eee;
         margin-left: 10px;
     }
+
+/* Dropdown Button */
+.dropbtn {
+    /*background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none; */
+    cursor: pointer;
+    font-size: 11px;
+    height: 18px;
+}
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #3e8e41;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.crossbeams-action-dropdown {
+    position: relative;
+    display: inline-block;
+    /* height: 16px; */
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 99;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.showActionDropdown {
+  display:block;
+}
   </style>
-<div id="myGrid" class="ag-blue" style="height: 400px"></div>
+<div id="myGrid" class="ag-fresh" style="height: 400px"></div>
  <% content_for :late_javascript do %>
    <script>
      // var thirdLevelRowData = [
@@ -1486,11 +1536,171 @@ var twoRowData =
     ]
   }
 ]
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+function crossbeamsActionCall(that) {
+  // Add HTML to window and move to position.
+  that.nextElementSibling.classList.toggle("showActionDropdown"); // next sibling...
+    // document.getElementById("myDropdown").classList.toggle("showActionDropdown"); // next sibling...
+}
+
+var actionsRenderer = function(params) {
+  console.log('Params val:', params.value);
+  var url_components = params.value.url.split("$");
+  var url = "";
+  url_components.forEach(function(cmp, index) {
+    if(index % 2 == 0) {
+      url += cmp;
+    } else {
+      console.log(cmp);
+      console.log(params.data[params.value[cmp]]);
+      url += params.data[params.value[cmp]];
+    }
+  });
+  // return "<button>"+params.value.text+"</button>";
+  return "<button>" + url + "</button>";
+};
+
+var menuActionsRenderer = function(params) {
+  // params value should always be an array.
+  // if empty, render ''
+  if(params.value.length === 0) { return ''; }
+  // Also need to implement null_if rules here...
+
+  var url_components;
+  var url;
+  var rend = '<div class="crossbeams-action-dropdown">' +
+               '<button onclick="crossbeamsActionCall(this)" class="dropbtn">Actions</button>' +
+               '<div class="dropdown-content">';
+  params.value.forEach(function(item) {
+    url_components = item.url.split("$");
+    url = "";
+    url_components.forEach(function(cmp, index) {
+      if(index % 2 == 0) {
+        url += cmp;
+      } else {
+        console.log(cmp);
+        console.log(params.data[item[cmp]]);
+        url += params.data[item[cmp]];
+      }
+    });
+    rend += '<a href="' + url + '">' + item.text + '</a>';
+  });
+  return rend + "</div></div>";
+// 
+//   <button onclick="myFunction()" class="dropbtn">Dropdown</button>
+//   <div id="myDropdown" class="dropdown-content">
+//     <a href="#">Link 1</a>
+//     <a href="#">Link 2</a>
+//     <a href="#">Link 3</a>
+//   </div>
+// </div>
+  // <ul class="dropdown">
+  // <li>
+  //   <a href="…">Page 1</a>
+  //   <ul>
+  //     <li>
+  //       <a href="…">Sub-page 1.1</a>
+  //     </li>
+  //     <li>
+  //       <a href="…">Sub-page 1.2</a>
+  //     </li>
+  //   </ul>
+  // </li><li>
+  //   <a href="…">Page 2</a>
+  //   <ul>
+  //     <li>
+  //       <a href="…">Sub-page 2.1</a>
+  //     </li>
+  //     <li>
+  //       <a href="…">Sub-page 2.2</a>
+  //     </li>
+  //   </ul>
+  // </li>
+  //   </ul>
+  // console.log('Params val:', params.value);
+  // var url_components = params.value.url.split("$");
+  // var url = "";
+  // url_components.forEach(function(cmp, index) {
+  //   if(index % 2 == 0) {
+  //     url += cmp;
+  //   } else {
+  //     console.log(cmp);
+  //     console.log(params.data[params.value[cmp]]);
+  //     url += params.data[params.value[cmp]];
+  //   }
+  // });
+  // // return "<button>"+params.value.text+"</button>";
+  // return "<button>" + url + "</button>";
+};
+
+var cmenuActionsRenderer = function(params) {
+  // params value should always be an array.
+  // if empty, render ''
+  if(params.value.length === 0) { return ''; }
+
+  console.log(params.context, params.rowIndex, params.value);
+  console.log(JSON.stringify(params.value));
+  // Create html element & add data row reference....
+    return "<button class='grid-context-menu' data-row='"+JSON.stringify(params.value)+"'>list</button>";
+  // grid id, row id.
+};
+var dmenuActionsRenderer = function(params) {
+  // params value should always be an array.
+  // if empty, render ''
+  if(params.value.length === 0) { return ''; }
+  var items = [];
+  var url_components;
+  var url;
+  params.value.forEach(function(item) {
+    url_components = item.url.split("$");
+    url = "";
+    url_components.forEach(function(cmp, index) {
+     if(index % 2 == 0) {
+        url += cmp;
+      } else {
+        console.log(cmp);
+        // console.log(params.data[item[cmp]]); // Get row data from grid first...
+        url += params.data[item[cmp]];
+      }
+    });
+    items.push({name: item.text, url: url, prompt: item.prompt, method: item.method});
+  });
+    return "<button class='grid-context-menu' data-row='"+JSON.stringify(items)+"'>list</button>";
+  // var theBtn = document.createElement('button');
+  // theBtn.classList.add('grid-context-menu');
+  // theBtn.textContent ='list';
+  // theBtn.dataset.row = JSON.stringify(params.value);
+  // theBtn.gridrow = params.data;
+  // return theBtn;
+  // unpack value + row & gen new version of params.
+  //valueGetter:
+  // [
+  //   {text:"Edit", url: "/masterfiles/users/users/$col$/edit", col: "id"},
+  //   {text:"Delete", url: "/masterfiles/users/users/$col$/delete|Are you sure?", col: "id"}
+  // ]
+  // var eDiv = document.createElement('div');
+    // eDiv.innerHTML = '<span class="my-css-class"><button class="btn-simple">Push Me</button></span>';
+    // var eButton = eDiv.querySelectorAll('.btn-simple')[0];
+    //
+    // var eButton.addEventListener('click', function() {
+    //           console.log('button was clicked!!');
+    //       });
+    //
+    // return eDiv;
+};
 
     //hs = {id: row['program_id'], functional_area_name: row['functional_area_name'], program_name: row['program_name'], active: row['p_active'], created_at: row['p_created_at'], updated_at: row['updated_at'],
 var masterColumnDefs = [
-  {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'/edit|edit'","colId":"link_0","cellRenderer":crossbeamsGridFormatters.hrefSimpleFormatter},
-  {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'|delete|Are you sure?'","colId":"link_1","cellRenderer":crossbeamsGridFormatters.hrefPromptFormatter},
+  {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,
+    // "valueGetter":"[{text:'Edit', url:'/masterfiles/users/users/'+data.id+'/edit|edit'},{text:'Delete', url: '/masterfiles/users/users/'+data.id+'|delete|Are you sure?'}]",
+    "colId":"link_1",
+    valueGetter:'[{text:"Edit", url: "/masterfiles/users/users/$col$/edit", col: "id"},{text:"Delete", url: "/masterfiles/users/users/$col$/delete", prompt: "Are you sure?", col: "id", method: "delete", title: "Functional Area"}]',
+    // valueGetter:'[]',
+    "cellRenderer": crossbeamsGridFormatters.menuActionsRenderer},
+
+  // {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'/edit|edit'","colId":"link_0","cellRenderer":crossbeamsGridFormatters.hrefSimpleFormatter},
+  // {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'|delete|Are you sure?'","colId":"link_1","cellRenderer":crossbeamsGridFormatters.hrefPromptFormatter},
   {headerName: 'Functional Area', field: 'functional_area_name',
     // left column is going to act as group column, with the expand / contract controls
     cellRenderer: 'group',
@@ -1505,8 +1715,20 @@ var masterColumnDefs = [
   {headerName: 'Updated', field:'updated_at'}
 ];
 var midLevelColumnDefs = [
-  {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'/edit|edit'","colId":"link_0","cellRenderer":crossbeamsGridFormatters.hrefSimpleFormatter},
-  {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'|delete|Are you sure?'","colId":"link_1","cellRenderer":crossbeamsGridFormatters.hrefPromptFormatter},
+  // {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'/edit|edit'","colId":"link_0","cellRenderer":crossbeamsGridFormatters.hrefSimpleFormatter},
+  // {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'|delete|Are you sure?'","colId":"link_1","cellRenderer":crossbeamsGridFormatters.hrefPromptFormatter},
+  // {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,
+    // // "valueGetter":"[{text:'Edit', url:'/masterfiles/users/users/'+data.id+'/edit|edit'},{text:'Delete', url: '/masterfiles/users/users/'+data.id+'|delete|Are you sure?'}]",
+    // "colId":"link_1",
+    // "valueGetter":"Edit",
+    // "cellRenderer":actionsRenderer},
+
+  {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,
+    // "valueGetter":"[{text:'Edit', url:'/masterfiles/users/users/'+data.id+'/edit|edit'},{text:'Delete', url: '/masterfiles/users/users/'+data.id+'|delete|Are you sure?'}]",
+    "colId":"link_1",
+    valueGetter:'[{text:"Edit", url: "/masterfiles/users/users/$col$/edit", col: "id"},{text:"Delete", url: "/masterfiles/users/users/$col$/delete|Are you sure?", col: "id"}]',
+    // valueGetter:'[]',
+    "cellRenderer":dmenuActionsRenderer},
   {headerName: 'Program', field: 'program_name',
     // left column is going to act as group column, with the expand / contract controls
     cellRenderer: 'group',
@@ -1523,8 +1745,14 @@ var midLevelColumnDefs = [
 
   // nh = {id: row['id'], program_function_name: row['program_function_name'], group_name: row['group_name'], url: row['url'], program_function_sequence: row['program_function_sequence'],
 var detailColumnDefs = [
-  {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'/edit|edit'","colId":"link_0","cellRenderer":crossbeamsGridFormatters.hrefSimpleFormatter},
-  {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'|delete|Are you sure?'","colId":"link_1","cellRenderer":crossbeamsGridFormatters.hrefPromptFormatter},
+  {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,
+    // "valueGetter":"[{text:'Edit', url:'/masterfiles/users/users/'+data.id+'/edit|edit'},{text:'Delete', url: '/masterfiles/users/users/'+data.id+'|delete|Are you sure?'}]",
+    "colId":"link_1",
+    valueGetter:'[{text:"Edit", url: "/masterfiles/users/users/$col$/edit", col: "id"},{text:"Delete", url: "/masterfiles/users/users/$col$/delete|Are you sure?", col: "id"}]',
+    // valueGetter:'[]',
+    "cellRenderer":dmenuActionsRenderer},
+  // {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'/edit|edit'","colId":"link_0","cellRenderer":crossbeamsGridFormatters.hrefSimpleFormatter},
+  // {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'|delete|Are you sure?'","colId":"link_1","cellRenderer":crossbeamsGridFormatters.hrefPromptFormatter},
   {headerName: 'Program function name', field: 'program_function_name'},
   {headerName: 'ID', field: 'id', cellClass: 'grid-number-column'},
   {headerName: 'Group', field: 'group_name'},
@@ -1692,7 +1920,7 @@ DetailPanelCellRenderer.prototype.getTemplate = function(params) {
   var parentRecord = params.node.parent.data;
 
   var template =
-    '<div class="full-width-panel">' +
+    '<div class="full-width-panel"style="background-color: silver">' +
     '  <div class="full-width-grid" style="height:100%"></div>' +
     '  <div class="full-width-grid-toolbar">' +
     '       <b>Program: </b>'+parentRecord.program_name +
@@ -1751,6 +1979,7 @@ DetailPanelCellRenderer.prototype.consumeMouseWheelOnDetailGrid = function() {
 };
 
 var masterGridOptions = {
+  context: 'myGrid',
   columnDefs: masterColumnDefs,
   rowData: rowData,
   enableSorting: true,
@@ -1792,6 +2021,63 @@ var masterGridOptions = {
 document.addEventListener('DOMContentLoaded', function() {
   var gridDiv = document.querySelector('#myGrid');
   new agGrid.Grid(gridDiv, masterGridOptions);
+});
+
+$(function(){
+  $.contextMenu({
+    selector: '.grid-context-menu', 
+    trigger: 'left',
+    build: function($trigger, e) {
+      // this callback is executed every time the menu is to be shown
+      // its results are destroyed every time the menu is hidden
+      // e is the original contextmenu event, containing e.pageX and e.pageY (amongst other data)
+      // var url_components;
+      // var url;
+      const row = e.target.dataset.row;
+      let items = {};
+      JSON.parse(row).forEach(function(item) {
+        items[item.name] = {name: item.name, url: item.url, prompt: item.prompt, method: item.method, title: item.title}
+      });
+
+      return {
+        callback: function(key, options) {
+          const item = items[key];
+          const caller = function() {
+            if(item.method === undefined) {
+              window.location = item.url;
+            } else {
+              document.body.innerHTML += '<form id="dynForm" action="' + item.url +
+                '" method="post"><input name="_method" type="hidden" value="'+item.method+'" /></form>';
+              document.getElementById("dynForm").submit();
+            }
+          }
+          if(item.prompt !== undefined) {
+            crossbeamsUtils.confirm({prompt: item.prompt, okFunc: caller, title: item.title});
+          } else {
+            caller();
+          }
+        },
+        items: items
+      };
+    }
+  });
+  //     return {
+  //       callback: function(key, options) {
+  //         var m = "clicked: " + key;
+  //         window.console && console.log(m) || alert(m); 
+  //       },
+  //       items: {
+  //         "edit": {name: "Edit", icon: "edit"},
+  //         "cut": {name: "Cut", icon: "cut"},
+  //         "copy": {name: "Copy", icon: "copy"},
+  //         "paste": {name: "Paste", icon: "paste"},
+  //         "delete": {name: "Delete", icon: "delete"},
+  //         "sep1": "---------",
+  //         "quit": {name: "Quit", icon: function($element, key, item){ return 'context-menu-icon context-menu-icon-quit'; }}
+  //       }
+  //     };
+  //   }
+  // });
 });
 </script>
 <% end %>

@@ -1,9 +1,9 @@
 ---
 :dataminer_definition: payment_terms
 :actions:
-  - :url: /finance/payment_terms/payment_terms/{:id}/edit
+  - :url: /finance/payment_terms/payment_terms/$:id$/edit
     :text: edit
-  - :url: /finance/payment_terms/payment_terms/{:id}
+  - :url: /finance/payment_terms/payment_terms/$:id$
     :text: delete
     :is_delete: true
 
