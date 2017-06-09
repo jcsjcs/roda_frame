@@ -24,11 +24,11 @@
 
   // Prevent multiple clicks of submit buttons.
   function preventMultipleSubmits() {
-    this.disabled = true; // if AJAX...
     this.dataset.enableWith = this.value;
     this.value = this.dataset.disableWith;
     this.classList.remove('dim');
     this.classList.add('o-50');
+    window.setTimeout('this.disabled=true', 0); // Disable the button with a delay so the form still submits...
   }
 
   // // Remove disabled state from button

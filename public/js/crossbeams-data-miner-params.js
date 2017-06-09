@@ -5,7 +5,7 @@ const crossbeamsDataMinerParams = {
 
   formId: '',
   reportNo: '',
-  queryParams: [],
+  queryParams: {},
   current_values: [],
 
   removeQueryParamItem: function removeQueryParamItem(node) {
@@ -23,7 +23,7 @@ const crossbeamsDataMinerParams = {
     } else {
       val = item.text;
       if (item.op === 'between') {
-        valTo = ` AND ${item.text_to}`;
+        valTo = ` AND ${item.textTo}`;
       } else {
         valTo = '';
       }
@@ -100,7 +100,7 @@ const crossbeamsDataMinerParams = {
   // valTo         : second value for date ranges
   // text          : selected value as text
   // (e.g. for dropdown this could differ from the value)
-  // text_to        : second value for date ranges as text
+  // textTo        : second value for date ranges as text
   // }
   addQpFormParam: function addQpFormParam() {
     const choice = {};
@@ -114,10 +114,10 @@ const crossbeamsDataMinerParams = {
     const qp = this.queryParams[choice.col];
     if (qp.control_type === 'list') {
       choice.text = valElem.options[valElem.selectedIndex].text;
-      choice.text_to = '';
+      choice.textTo = '';
     } else {
       choice.text = choice.val;
-      choice.text_to = choice.valTo;
+      choice.textTo = choice.valTo;
     }
     choice.caption = qp.caption;
     // if something other than is null or not null, 1st val must be present.
@@ -193,7 +193,7 @@ const crossbeamsDataMinerParams = {
     // console.log(queryParams[qp]['default_value']); } }
     const choice = {};
     let elem = null;
-    queryParams.forEach((qp) => {
+    Object.keys(queryParams).forEach((qp) => {
       if (queryParams[qp].default_value) {
         // console.log(queryParams[qp]['default_value']);
         elem = queryParams[qp];
@@ -203,7 +203,7 @@ const crossbeamsDataMinerParams = {
         choice.val = elem.default_value;
         choice.text = elem.default_value;
         choice.valTo = '';
-        choice.text_to = '';
+        choice.textTo = '';
         choice.caption = elem.caption;
         this.current_values.push(choice);
       }
@@ -218,7 +218,7 @@ const crossbeamsDataMinerParams = {
     //         choice.val = elem.default_value;
     //         choice.text = elem.default_value;
     //         choice.valTo = "";
-    //         choice.text_to = "";
+    //         choice.textTo = "";
     //         choice.caption = elem.caption;
     //         this.current_values.push(choice);
     //     }
@@ -266,8 +266,7 @@ const crossbeamsDataMinerParams = {
           valInput = `<input name="qp_value" id="qp_value" value="${
             (qp.default_value === null
               ? ''
-                : qp.default_value)}
-            ${inputType} />
+                : qp.default_value)}" ${inputType} />
             <input name="qp_value_to" id="qp_value_to" ${inputType} />`;
         } else {
           valInput = `<input name="qp_value" id="qp_value" value="${

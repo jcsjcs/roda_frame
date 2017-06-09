@@ -169,7 +169,12 @@
   :default_value: 
   :ordered_list: 44
   :ui_priority: 1
-  :list_def: SELECT department_name, id FROM departments ORDER BY department_name
+  # :list_def: SELECT department_name, id FROM departments ORDER BY department_name
+  :list_def: 
+  - - IT
+    - 1
+  - - Finance
+    - 2
 - :column: users.user_name
   :caption: Login name
   :data_type: :string
