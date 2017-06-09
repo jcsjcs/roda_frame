@@ -72,75 +72,19 @@
     <script src="/js/ag-grid-enterprise.js" type="text/javascript"></script>
     <script src="/js/ag-enterprise-activation.js" type="text/javascript"></script>
     <script src="/js/jackbox.min.js" type="text/javascript"></script>
+    <script src="/js/jquery-3.2.1.min.js" type="text/javascript"></script>
+    <script src="/js/jquery.ui.position.js" type="text/javascript"></script>
+    <script src="/js/jquery.contextMenu.js" type="text/javascript"></script>
+    <script src="/js/sweetalert2.min.js" type="text/javascript"></script>
     <script src="/js/crossbeams-local-storage.js" type="text/javascript"></script>
     <script src="/js/crossbeams-utils.js" type="text/javascript"></script>
     <script src="/js/crossbeams-layout.js" type="text/javascript"></script>
     <script src="/js/crossbeams-data-miner-params.js" type="text/javascript"></script>
     <script src="/js/crossbeams-grid-loader.js" type="text/javascript"></script>
     <script src="/js/choices.min.js" type="text/javascript"></script>
-    <script src="/js/sweetalert2.min.js" type="text/javascript"></script>
-    <script src="/js/jquery-3.2.1.min.js" type="text/javascript"></script>
-    <script src="/js/jquery.ui.position.js" type="text/javascript"></script>
-    <script src="/js/jquery.contextMenu.js" type="text/javascript"></script>
     <%#= javascript 'ag-grid-enterprise', 'ag-enterprise-activation', 'crossbeams-local-storage', 'crossbeams-utils', 'crossbeams-layout', 'crossbeams-data-miner-params', 'crossbeams-grid-loader' %>
 
     <script>
-$(function(){
-  $.contextMenu({
-    selector: '.grid-context-menu', 
-    trigger: 'left',
-    build: function($trigger, e) {
-      // this callback is executed every time the menu is to be shown
-      // its results are destroyed every time the menu is hidden
-      // e is the original contextmenu event, containing e.pageX and e.pageY (amongst other data)
-      // var url_components;
-      // var url;
-      const row = e.target.dataset.row;
-      let items = {};
-      JSON.parse(row).forEach(function(item) {
-        items[item.name] = {name: item.name, url: item.url, prompt: item.prompt, method: item.method, title: item.title}
-      });
-
-      return {
-        callback: function(key, options) {
-          const item = items[key];
-          const caller = function() {
-            if(item.method === undefined) {
-              window.location = item.url;
-            } else {
-              document.body.innerHTML += '<form id="dynForm" action="' + item.url +
-                '" method="post"><input name="_method" type="hidden" value="'+item.method+'" /></form>';
-              document.getElementById("dynForm").submit();
-            }
-          }
-          if(item.prompt !== undefined) {
-            crossbeamsUtils.confirm({prompt: item.prompt, okFunc: caller, title: item.title});
-          } else {
-            caller();
-          }
-        },
-        items: items
-      };
-    }
-  });
-  //     return {
-  //       callback: function(key, options) {
-  //         var m = "clicked: " + key;
-  //         window.console && console.log(m) || alert(m); 
-  //       },
-  //       items: {
-  //         "edit": {name: "Edit", icon: "edit"},
-  //         "cut": {name: "Cut", icon: "cut"},
-  //         "copy": {name: "Copy", icon: "copy"},
-  //         "paste": {name: "Paste", icon: "paste"},
-  //         "delete": {name: "Delete", icon: "delete"},
-  //         "sep1": "---------",
-  //         "quit": {name: "Quit", icon: function($element, key, item){ return 'context-menu-icon context-menu-icon-quit'; }}
-  //       }
-  //     };
-  //   }
-  // });
-});
       Jackbox.init();
       <% if flash[:notice] %>
         Jackbox.success('<%= flash[:notice].tr("'", "`") %>');
