@@ -1,18 +1,22 @@
 ---
-:caption: Lookup person
-:sql: select id, first_name, last_name, party_id, title, date_of_birth, maiden_name,
-  industry_number, initials, is_deleted, is_logged_on, logged_onto_module, logged_onoff_time,
-  reader_id, created_at, updated_at, affected_by_env, affected_by_function, affected_by_program,
-  created_by, updated_by from people
+:caption: Functional Areas, Programs and Program Functions
+:sql: "SELECT \r\nf.id AS functional_area_id, p.id AS program_id, pf.id, f.functional_area_name,
+  f.active AS f_active, f.created_at AS f_created_at, f.updated_at AS f_updated_at,\r\np.program_name,
+  p.active AS p_active, p.created_at AS p_created_at, p.updated_at AS p_updated_at,
+  -- p.functional_area_id\r\npf.group_name, pf.program_function_name, pf.url, pf.program_function_sequence,
+  \r\n       pf.restricted_user_access, pf.active AS pf_active, pf.created_at AS pf_created_at,
+  pf.updated_at AS pf_updated_at\r\n  FROM functional_areas f\r\n LEFT OUTER JOIN programs p
+  ON p.functional_area_id = f.id\r\n LEFT OUTER JOIN program_functions pf ON pf.program_id = p.id\r\nORDER
+  BY f.functional_area_name, p.program_name, pf.group_name, pf.program_function_sequence"
 :limit: 
 :offset: 
 :columns:
-  id:
-    :name: id
+  functional_area_id:
+    :name: functional_area_id
     :sequence_no: 1
     :caption: Id
-    :namespaced_name: id
-    :data_type: :string
+    :namespaced_name: f.id
+    :data_type: :integer
     :width: 
     :format: 
     :hide: false
@@ -22,13 +26,13 @@
     :group_avg: false
     :group_min: false
     :group_max: false
-  first_name:
-    :name: first_name
+  program_id:
+    :name: program_id
     :sequence_no: 2
-    :caption: First name
-    :namespaced_name: first_name
-    :data_type: :string
-    :width: 50
+    :caption: Id
+    :namespaced_name: p.id
+    :data_type: :integer
+    :width: 
     :format: 
     :hide: false
     :groupable: false
@@ -37,42 +41,42 @@
     :group_avg: false
     :group_min: false
     :group_max: false
-  last_name:
-    :name: last_name
+  id:
+    :name: id
     :sequence_no: 3
-    :caption: Last name
-    :namespaced_name: last_name
-    :data_type: :string
+    :caption: Id
+    :namespaced_name: pf.id
+    :data_type: :integer
     :width: 
     :format: 
     :hide: false
-    :groupable: false
+    :groupable: true
     :group_by_seq: 
     :group_sum: false
     :group_avg: false
     :group_min: false
     :group_max: false
-  party_id:
-    :name: party_id
+  functional_area_name:
+    :name: functional_area_name
     :sequence_no: 4
-    :caption: Party
-    :namespaced_name: party_id
+    :caption: Functional area name
+    :namespaced_name: f.functional_area_name
     :data_type: :string
     :width: 
     :format: 
     :hide: false
-    :groupable: false
+    :groupable: true
     :group_by_seq: 
     :group_sum: false
     :group_avg: false
     :group_min: false
     :group_max: false
-  title:
-    :name: title
+  f_active:
+    :name: f_active
     :sequence_no: 5
-    :caption: Title
-    :namespaced_name: title
-    :data_type: :string
+    :caption: Active
+    :namespaced_name: f.active
+    :data_type: :boolean
     :width: 
     :format: 
     :hide: false
@@ -82,147 +86,12 @@
     :group_avg: false
     :group_min: false
     :group_max: false
-  date_of_birth:
-    :name: date_of_birth
+  f_created_at:
+    :name: f_created_at
     :sequence_no: 6
-    :caption: Date of birth
-    :namespaced_name: date_of_birth
-    :data_type: :string
-    :width: 
-    :format: 
-    :hide: false
-    :groupable: false
-    :group_by_seq: 
-    :group_sum: false
-    :group_avg: false
-    :group_min: false
-    :group_max: false
-  maiden_name:
-    :name: maiden_name
-    :sequence_no: 7
-    :caption: Maiden name
-    :namespaced_name: maiden_name
-    :data_type: :string
-    :width: 
-    :format: 
-    :hide: false
-    :groupable: false
-    :group_by_seq: 
-    :group_sum: false
-    :group_avg: false
-    :group_min: false
-    :group_max: false
-  industry_number:
-    :name: industry_number
-    :sequence_no: 8
-    :caption: Industry number
-    :namespaced_name: industry_number
-    :data_type: :string
-    :width: 
-    :format: 
-    :hide: false
-    :groupable: false
-    :group_by_seq: 
-    :group_sum: false
-    :group_avg: false
-    :group_min: false
-    :group_max: false
-  initials:
-    :name: initials
-    :sequence_no: 9
-    :caption: Initials
-    :namespaced_name: initials
-    :data_type: :string
-    :width: 
-    :format: 
-    :hide: false
-    :groupable: false
-    :group_by_seq: 
-    :group_sum: false
-    :group_avg: false
-    :group_min: false
-    :group_max: false
-  is_deleted:
-    :name: is_deleted
-    :sequence_no: 10
-    :caption: Is deleted
-    :namespaced_name: is_deleted
-    :data_type: :boolean
-    :width: 
-    :format: 
-    :hide: false
-    :groupable: false
-    :group_by_seq: 
-    :group_sum: false
-    :group_avg: false
-    :group_min: false
-    :group_max: false
-  is_logged_on:
-    :name: is_logged_on
-    :sequence_no: 11
-    :caption: Is logged on
-    :namespaced_name: is_logged_on
-    :data_type: :boolean
-    :width: 
-    :format: 
-    :hide: false
-    :groupable: false
-    :group_by_seq: 
-    :group_sum: false
-    :group_avg: false
-    :group_min: false
-    :group_max: false
-  logged_onto_module:
-    :name: logged_onto_module
-    :sequence_no: 12
-    :caption: Logged onto module
-    :namespaced_name: logged_onto_module
-    :data_type: :string
-    :width: 
-    :format: 
-    :hide: false
-    :groupable: false
-    :group_by_seq: 
-    :group_sum: false
-    :group_avg: false
-    :group_min: false
-    :group_max: false
-  logged_onoff_time:
-    :name: logged_onoff_time
-    :sequence_no: 13
-    :caption: Logged onoff time
-    :namespaced_name: logged_onoff_time
-    :data_type: :string
-    :width: 
-    :format: 
-    :hide: false
-    :groupable: false
-    :group_by_seq: 
-    :group_sum: false
-    :group_avg: false
-    :group_min: false
-    :group_max: false
-  reader_id:
-    :name: reader_id
-    :sequence_no: 14
-    :caption: Reader
-    :namespaced_name: reader_id
-    :data_type: :string
-    :width: 
-    :format: 
-    :hide: false
-    :groupable: false
-    :group_by_seq: 
-    :group_sum: false
-    :group_avg: false
-    :group_min: false
-    :group_max: false
-  created_at:
-    :name: created_at
-    :sequence_no: 15
     :caption: Created at
-    :namespaced_name: created_at
-    :data_type: :string
+    :namespaced_name: f.created_at
+    :data_type: :datetime
     :width: 
     :format: 
     :hide: false
@@ -232,11 +101,86 @@
     :group_avg: false
     :group_min: false
     :group_max: false
-  updated_at:
-    :name: updated_at
-    :sequence_no: 16
+  f_updated_at:
+    :name: f_updated_at
+    :sequence_no: 7
     :caption: Updated at
-    :namespaced_name: updated_at
+    :namespaced_name: f.updated_at
+    :data_type: :datetime
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  program_name:
+    :name: program_name
+    :sequence_no: 8
+    :caption: Program name
+    :namespaced_name: p.program_name
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: true
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  p_active:
+    :name: p_active
+    :sequence_no: 9
+    :caption: Active
+    :namespaced_name: p.active
+    :data_type: :boolean
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  p_created_at:
+    :name: p_created_at
+    :sequence_no: 10
+    :caption: Created at
+    :namespaced_name: p.created_at
+    :data_type: :datetime
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  p_updated_at:
+    :name: p_updated_at
+    :sequence_no: 11
+    :caption: Updated at
+    :namespaced_name: p.updated_at
+    :data_type: :datetime
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  group_name:
+    :name: group_name
+    :sequence_no: 12
+    :caption: Group name
+    :namespaced_name: pf.group_name
     :data_type: :string
     :width: 
     :format: 
@@ -247,12 +191,72 @@
     :group_avg: false
     :group_min: false
     :group_max: false
-  affected_by_env:
-    :name: affected_by_env
+  program_function_name:
+    :name: program_function_name
+    :sequence_no: 13
+    :caption: Program function name
+    :namespaced_name: pf.program_function_name
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  url:
+    :name: url
+    :sequence_no: 14
+    :caption: Url
+    :namespaced_name: pf.url
+    :data_type: :string
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  program_function_sequence:
+    :name: program_function_sequence
+    :sequence_no: 15
+    :caption: Program function sequence
+    :namespaced_name: pf.program_function_sequence
+    :data_type: :integer
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  restricted_user_access:
+    :name: restricted_user_access
+    :sequence_no: 16
+    :caption: Restricted user access
+    :namespaced_name: pf.restricted_user_access
+    :data_type: :boolean
+    :width: 
+    :format: 
+    :hide: false
+    :groupable: false
+    :group_by_seq: 
+    :group_sum: false
+    :group_avg: false
+    :group_min: false
+    :group_max: false
+  pf_active:
+    :name: pf_active
     :sequence_no: 17
-    :caption: Affected by env
-    :namespaced_name: affected_by_env
-    :data_type: :string
+    :caption: Active
+    :namespaced_name: pf.active
+    :data_type: :boolean
     :width: 
     :format: 
     :hide: false
@@ -262,12 +266,12 @@
     :group_avg: false
     :group_min: false
     :group_max: false
-  affected_by_function:
-    :name: affected_by_function
+  pf_created_at:
+    :name: pf_created_at
     :sequence_no: 18
-    :caption: Affected by function
-    :namespaced_name: affected_by_function
-    :data_type: :string
+    :caption: Created at
+    :namespaced_name: pf.created_at
+    :data_type: :datetime
     :width: 
     :format: 
     :hide: false
@@ -277,42 +281,12 @@
     :group_avg: false
     :group_min: false
     :group_max: false
-  affected_by_program:
-    :name: affected_by_program
+  pf_updated_at:
+    :name: pf_updated_at
     :sequence_no: 19
-    :caption: Affected by program
-    :namespaced_name: affected_by_program
-    :data_type: :string
-    :width: 
-    :format: 
-    :hide: false
-    :groupable: false
-    :group_by_seq: 
-    :group_sum: false
-    :group_avg: false
-    :group_min: false
-    :group_max: false
-  created_by:
-    :name: created_by
-    :sequence_no: 20
-    :caption: Created by
-    :namespaced_name: created_by
-    :data_type: :string
-    :width: 
-    :format: 
-    :hide: false
-    :groupable: false
-    :group_by_seq: 
-    :group_sum: false
-    :group_avg: false
-    :group_min: false
-    :group_max: false
-  updated_by:
-    :name: updated_by
-    :sequence_no: 21
-    :caption: Updated by
-    :namespaced_name: updated_by
-    :data_type: :string
+    :caption: Updated at
+    :namespaced_name: pf.updated_at
+    :data_type: :datetime
     :width: 
     :format: 
     :hide: false

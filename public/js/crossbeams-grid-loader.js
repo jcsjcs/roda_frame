@@ -211,6 +211,7 @@ const crossbeamsGridFormatters = {
   },
 
   menuActionsRenderer: function menuActionsRenderer(params) {
+    if (!params.data) { return null }
     // params value should always be an array.
     // if empty, render ''
     // console.log('parm', params);
@@ -224,22 +225,29 @@ const crossbeamsGridFormatters = {
     let urlComponents;
     let url;
     valueObj.forEach((item) => {
-      urlComponents = item.url.split('$');
-      url = '';
-      urlComponents.forEach((cmp, index) => {
-        if (index % 2 === 0) {
-          url += cmp;
-        } else {
-          url += params.data[item[cmp]];
-        }
-      });
-      // console.log('t1',item.title);
-      items.push({ name: item.text,
-        url,
-        prompt: item.prompt,
-        method: item.method,
-        title: item.title,
-      });
+      if (item.is_separator) {
+        items.push({ name: item.text, value: '---' });
+      } else if (item.hide_if_null && params.data[item.hide_if_null] === null) {
+        // No show of item
+      } else {
+        urlComponents = item.url.split('$');
+        url = '';
+        urlComponents.forEach((cmp, index) => {
+          if (index % 2 === 0) {
+            url += cmp;
+          } else {
+            url += params.data[item[cmp]];
+          }
+        });
+        // console.log('t1',item.title);
+        items.push({ name: item.text,
+          url,
+          prompt: item.prompt,
+          method: item.method,
+          title: item.title,
+        });
+      }
+      // TODO: remove separator if last item, remove if two in a row... (lodash?)
     });
     // console.log(JSON.stringify(items));
     return `<button class='grid-context-menu' data-row='${JSON.stringify(items)}'>list</button>`;
@@ -247,6 +255,8 @@ const crossbeamsGridFormatters = {
 
   // Return a number with thousand separator and at least 2 digits after the decimal.
   numberWithCommas2: function numberWithCommas2(params) {
+    if (!params.data) { return null }
+
     let x = params.value;
     let parts = [];
     if (typeof x === 'string') { x = parseFloat(x); }
@@ -261,6 +271,8 @@ const crossbeamsGridFormatters = {
 
   // Return a number with thousand separator and at least 4 digits after the decimal.
   numberWithCommas4: function numberWithCommas4(params) {
+    if (!params.data) { return null }
+
     let x = params.value;
     let parts = [];
     if (typeof x === 'string') { x = parseFloat(x); }
@@ -274,8 +286,10 @@ const crossbeamsGridFormatters = {
   },
 
   booleanFormatter: function booleanFormatter(params) {
-    if (params.value === '') { return ''; }
-    if (params.value === 't' || params.value === 'true' || params.value === 'y' || params.value === 1) {
+    if (!params.data) { return null }
+
+    if (params.value === '' || params.value === null) { return ''; }
+    if (params.value === true || params.value === 't' || params.value === 'true' || params.value === 'y' || params.value === 1) {
       return '<span class="ac_icon_check">&nbsp;</span>';
     }
     return '<span class="ac_icon_uncheck">&nbsp;</span>';
@@ -367,6 +381,223 @@ NumericCellEditor.prototype.destroy = () => {
   // and we could leave this method out also, false is the default
 NumericCellEditor.prototype.isPopup = () => false;
 
+// -------------------------------------------------------------------
+var midLevelColumnDefs, detailColumnDefs;
+// -------------------------------------------------------------------
+
+function Level2PanelCellRenderer() {}
+
+Level2PanelCellRenderer.prototype.init = function(params) {
+  // trick to convert string of html into dom object
+  var eTemp = document.createElement('div');
+  eTemp.innerHTML = this.getTemplate(params);
+  this.eGui = eTemp.firstElementChild;
+
+  this.setupLevel2Grid(params.data);
+  this.consumeMouseWheelOnDetailGrid();
+  this.addSeachFeature();
+  // this.addButtonListeners();
+};
+
+Level2PanelCellRenderer.prototype.setupLevel2Grid = function(l2Data) {
+
+  this.level2GridOptions = {
+    enableSorting: true,
+    // enableFilter: true,
+    enableColResize: true,
+    rowData: l2Data,
+    columnDefs: midLevelColumnDefs, // TODO: ..............................
+  suppressMenuFilterPanel: true,
+  isFullWidthCell: function(rowNode) {
+    return rowNode.level === 1;
+  },
+    // onGridReady: function(params) {
+    //   setTimeout( function() { params.api.sizeColumnsToFit(); }, 0);
+    // },
+  // see ag-Grid docs cellRenderer for details on how to build cellRenderers
+  fullWidthCellRenderer: Level3PanelCellRenderer, // ONLY IF THERE IS A third....
+  getRowHeight: function(params) {
+    var rowIsDetailRow = params.node.level===1;
+    // return 100 when detail row, otherwise return 25
+    return rowIsDetailRow ? 200 : 25;
+  },
+  getNodeChildDetails: function(record) {
+    if (record.level3) {
+      return {
+        group: true,
+        // the key is used by the default group cellRenderer
+        key: record.program_name, // TODO: .........................
+        // provide ag-Grid with the children of this group
+        children: [record.level3]
+        // for demo, expand the third row by default
+        // expanded: record.account === 177005
+      };
+    } else {
+      return null;
+    }
+  }
+  };
+
+  var eDetailGrid = this.eGui.querySelector('.full-width-grid');
+  new agGrid.Grid(eDetailGrid, this.level2GridOptions);
+};
+
+Level2PanelCellRenderer.prototype.getTemplate = function(params) {
+
+  var parentRecord = params.node.parent.data;
+
+  var template =
+    '<div class="full-width-panel">' +
+    '  <div class="full-width-grid" style="height:100%"></div>' +
+    '  <div class="full-width-grid-toolbar">' +
+    '       <b>Functional area: </b>'+parentRecord.functional_area_name + // TODO: ................
+    '       <input class="full-width-search" placeholder="Search..."/>' +
+    '       <button>Add a Program</button>' +
+    '  </div>'+
+    '</div>';
+
+  return template;
+};
+
+Level2PanelCellRenderer.prototype.getGui = function() {
+  return this.eGui;
+};
+
+Level2PanelCellRenderer.prototype.destroy = function() {
+  this.level2GridOptions.api.destroy();
+};
+
+Level2PanelCellRenderer.prototype.addSeachFeature = function() {
+  var tfSearch = this.eGui.querySelector('.full-width-search');
+  var gridApi = this.level2GridOptions.api;
+
+  var searchListener = function() {
+    var filterText = tfSearch.value;
+    gridApi.setQuickFilter(filterText);
+  };
+
+  tfSearch.addEventListener('input', searchListener);
+};
+
+// Level2PanelCellRenderer.prototype.addButtonListeners = function() {
+//   var eButtons = this.eGui.querySelectorAll('.full-width-grid-toolbar button');
+//
+//   for (var i = 0;  i<eButtons.length; i++) {
+//     eButtons[i].addEventListener('click', function() {
+//       window.alert('Sample button pressed!!');
+//     });
+//   }
+// };
+
+// if we don't do this, then the mouse wheel will be picked up by the main
+// grid and scroll the main grid and not this component. this ensures that
+// the wheel move is only picked up by the text field
+Level2PanelCellRenderer.prototype.consumeMouseWheelOnDetailGrid = function() {
+  var eDetailGrid = this.eGui.querySelector('.full-width-grid');
+
+  var mouseWheelListener = function(event) {
+    event.stopPropagation();
+  };
+
+  // event is 'mousewheel' for IE9, Chrome, Safari, Opera
+  eDetailGrid.addEventListener('mousewheel', mouseWheelListener);
+  // event is 'DOMMouseScroll' Firefox
+  eDetailGrid.addEventListener('DOMMouseScroll', mouseWheelListener);
+};
+
+function Level3PanelCellRenderer() {}
+
+Level3PanelCellRenderer.prototype.init = function(params) {
+  // trick to convert string of html into dom object
+  var eTemp = document.createElement('div');
+  eTemp.innerHTML = this.getTemplate(params);
+  this.eGui = eTemp.firstElementChild;
+
+  this.setupDetailGrid(params.data);
+  this.consumeMouseWheelOnDetailGrid();
+  this.addSeachFeature();
+  // this.addButtonListeners();
+};
+
+Level3PanelCellRenderer.prototype.setupDetailGrid = function(l3Data) {
+
+  this.detailGridOptions = {
+    enableSorting: true,
+    enableFilter: true,
+    enableColResize: true,
+    rowData: l3Data,
+    columnDefs: detailColumnDefs, // .... TODO: ...............
+    // onGridReady: function(params) {
+    //   setTimeout( function() { params.api.sizeColumnsToFit(); }, 0);
+    // }
+  };
+
+  var eDetailGrid = this.eGui.querySelector('.full-width-grid');
+  new agGrid.Grid(eDetailGrid, this.detailGridOptions);
+};
+
+Level3PanelCellRenderer.prototype.getTemplate = function(params) {
+
+  var parentRecord = params.node.parent.data;
+
+  var template =
+    '<div class="full-width-panel"style="background-color: silver">' +
+    '  <div class="full-width-grid" style="height:100%"></div>' +
+    '  <div class="full-width-grid-toolbar">' +
+    '       <b>Program: </b>'+parentRecord.program_name + // TODO: .........................
+    '       <input class="full-width-search" placeholder="Search..."/>' +
+    '       <button>Add a Program Function</button>' +
+    '  </div>'+
+    '</div>';
+
+  return template;
+};
+
+Level3PanelCellRenderer.prototype.getGui = function() {
+  return this.eGui;
+};
+
+Level3PanelCellRenderer.prototype.destroy = function() {
+  this.detailGridOptions.api.destroy();
+};
+
+Level3PanelCellRenderer.prototype.addSeachFeature = function() {
+  var tfSearch = this.eGui.querySelector('.full-width-search');
+  var gridApi = this.detailGridOptions.api;
+
+  var searchListener = function() {
+    var filterText = tfSearch.value;
+    gridApi.setQuickFilter(filterText);
+  };
+
+  tfSearch.addEventListener('input', searchListener);
+};
+
+// Level3PanelCellRenderer.prototype.addButtonListeners = function() {
+//   var eButtons = this.eGui.querySelectorAll('.full-width-grid-toolbar button');
+//
+//   for (var i = 0;  i<eButtons.length; i++) {
+//     eButtons[i].addEventListener('click', function() {
+//       window.alert('Sample button pressed!!');
+//     });
+//   }
+// };
+
+// if we don't do this, then the mouse wheel will be picked up by the main
+// grid and scroll the main grid and not this component. this ensures that
+// the wheel move is only picked up by the text field
+Level3PanelCellRenderer.prototype.consumeMouseWheelOnDetailGrid = function() {
+  var eDetailGrid = this.eGui.querySelector('.full-width-grid');
+
+  var mouseWheelListener = function(event) {
+    event.stopPropagation();
+  };
+
+  // event is 'mousewheel' for IE9, Chrome, Safari, Opera
+  eDetailGrid.addEventListener('mousewheel', mouseWheelListener);
+  // event is 'DOMMouseScroll' Firefox
+  eDetailGrid.addEventListener('DOMMouseScroll', mouseWheelListener);
+};
 
 (function crossbeamsGridLoader() {
   // var onBtExport;
@@ -382,6 +613,7 @@ NumericCellEditor.prototype.isPopup = () => false;
       // for(attr in col) {
       Object.keys(col).forEach((attr) => {
         if (attr === 'cellRenderer') {
+          newCol[attr] = col[attr]; // Default behaviour is to copy it over.
           // fn = window[col[attr]];
           // newCol[attr] = fn;
           // newCol[attr] = eval(col[attr]);
@@ -410,9 +642,7 @@ NumericCellEditor.prototype.isPopup = () => false;
             newCol[attr] = crossbeamsGridFormatters.hrefPromptFormatter;
           }
         } else if (attr === 'cellEditor') {
-          // console.log('edit');
           if (col[attr] === 'NumericCellEditor') {
-            // console.log('edit - NUM');
             newCol[attr] = NumericCellEditor;
           } else {
             // Ignore other editor types   TODO: ????
@@ -437,8 +667,15 @@ NumericCellEditor.prototype.isPopup = () => false;
       let newColDefs = null;
       if (httpRequest.readyState === 4 && httpRequest.status === 200) {
         httpResult = JSON.parse(httpRequest.responseText);
-        newColDefs = translateColDefs(httpResult.columnDefs);
-        gridOptions.api.setColumnDefs(newColDefs);
+        // var midLevelColumnDefs, detailColumnDefs;
+        if (httpResult.nestedColumnDefs) {
+          newColDefs = translateColDefs(httpResult.nestedColumnDefs['1']);
+          midLevelColumnDefs = translateColDefs(httpResult.nestedColumnDefs['2']);
+          detailColumnDefs = translateColDefs(httpResult.nestedColumnDefs['3']);
+        } else {
+          newColDefs = translateColDefs(httpResult.columnDefs);
+        }
+        gridOptions.api.setColumnDefs(newColDefs); // TODO.............. ????
         gridOptions.api.setRowData(httpResult.rowDefs);
       }
     };
@@ -460,23 +697,66 @@ NumericCellEditor.prototype.isPopup = () => false;
       gridId = grid.getAttribute('id');
       forPrint = grid.dataset.gridPrint;
       // lookup of grid ids? populate here and clear when grid unloaded...
-      gridOptions = {
-        columnDefs: null,
-        rowDefs: null,
-        enableColResize: true,
-        enableSorting: true,
-        enableFilter: true,
-        suppressScrollLag: true,
-        enableRangeSelection: true,
-        enableStatusBar: true,
-        suppressAggFuncInHeader: true,
-        // onAfterFilterChanged: function() {
-        // console.log('onAfterFilterChanged',
-        // this.api.rowModel.rootNode.childrenAfterFilter.length, gridId);}
-        // onAfterFilterChanged: crossbeamsGridEvents.showFilterChange(gridId)
-        // suppressCopyRowsToClipboard: true
-        // quickFilterText: 'fred'
-      };
+      if (grid.dataset.nestedGrid) {
+        gridOptions = {
+          columnDefs: null,
+          rowDefs: null,
+          enableColResize: true,
+          enableSorting: true,
+          enableFilter: true,
+          suppressScrollLag: true,
+          enableRangeSelection: true,
+          enableStatusBar: true,
+          suppressAggFuncInHeader: true,
+          isFullWidthCell: function(rowNode) {
+            return rowNode.level === 1;
+          },
+          onGridReady: function(params) {
+            params.api.sizeColumnsToFit();
+          },
+          // see ag-Grid docs cellRenderer for details on how to build cellRenderers
+          fullWidthCellRenderer: Level2PanelCellRenderer,
+          getRowHeight: function(params) {
+            var rowIsDetailRow = params.node.level===1;
+            // return 100 when detail row, otherwise return 25
+            return rowIsDetailRow ? 400 : 25;
+          },
+          getNodeChildDetails: function(record) {
+            if (record.level2) {
+              return {
+                group: true,
+                // the key is used by the default group cellRenderer
+                key: record.functional_area_name, // ......................TODO: level1 expand_col...
+                // provide ag-Grid with the children of this group
+                children: [record.level2]
+                // for demo, expand the third row by default
+                // expanded: record.account === 177005
+              };
+            } else {
+              return null;
+            }
+          },
+        };
+      } else {
+        gridOptions = {
+          columnDefs: null,
+          rowDefs: null,
+          enableColResize: true,
+          enableSorting: true,
+          enableFilter: true,
+          suppressScrollLag: true,
+          enableRangeSelection: true,
+          enableStatusBar: true,
+          suppressAggFuncInHeader: true,
+          // onAfterFilterChanged: function() {
+          // console.log('onAfterFilterChanged',
+          // this.api.rowModel.rootNode.childrenAfterFilter.length, gridId);}
+          // onAfterFilterChanged: crossbeamsGridEvents.showFilterChange(gridId)
+          // suppressCopyRowsToClipboard: true
+          // quickFilterText: 'fred'
+        };
+      }
+
       if (forPrint) {
         gridOptions.forPrint = true;
         gridOptions.enableStatusBar = false;
@@ -506,13 +786,18 @@ $(() => {
       const row = e.target.dataset.row;
       const items = {};
       JSON.parse(row).forEach((item) => {
-        items[item.name] = {
-          name: item.name,
-          url: item.url,
-          prompt: item.prompt,
-          method: item.method,
-          title: item.title,
-        };
+        if (item.value && item.value === '---') {
+          items[item.name] = '---';
+        } else {
+          items[item.name] = {
+            name: item.value ? item.value : item.name,
+            url: item.url,
+            prompt: item.prompt,
+            method: item.method,
+            title: item.title,
+            is_separator: item.is_separator,
+          };
+        }
       });
 
       return {

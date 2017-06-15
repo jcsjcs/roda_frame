@@ -9,6 +9,7 @@
   <li>6</li>
 </ol>
 <button>Add a Functional Area</button>
+<a href="/security/functional_areas/functional_areas/new">New func area</a>
 <!--
 <section id="section-1" data-crossbeams_callback_section="the_url_here" class="crossbeams_layout">
   <h2>caption</h2>
@@ -1544,166 +1545,13 @@ var twoRowData =
     ]
   }
 ]
-/* When the user clicks on the button, 
-toggle between hiding and showing the dropdown content */
-function crossbeamsActionCall(that) {
-  // Add HTML to window and move to position.
-  that.nextElementSibling.classList.toggle("showActionDropdown"); // next sibling...
-    // document.getElementById("myDropdown").classList.toggle("showActionDropdown"); // next sibling...
-}
-
-var actionsRenderer = function(params) {
-  console.log('Params val:', params.value);
-  var url_components = params.value.url.split("$");
-  var url = "";
-  url_components.forEach(function(cmp, index) {
-    if(index % 2 == 0) {
-      url += cmp;
-    } else {
-      console.log(cmp);
-      console.log(params.data[params.value[cmp]]);
-      url += params.data[params.value[cmp]];
-    }
-  });
-  // return "<button>"+params.value.text+"</button>";
-  return "<button>" + url + "</button>";
-};
-
-var menuActionsRenderer = function(params) {
-  // params value should always be an array.
-  // if empty, render ''
-  if(params.value.length === 0) { return ''; }
-  // Also need to implement null_if rules here...
-
-  var url_components;
-  var url;
-  var rend = '<div class="crossbeams-action-dropdown">' +
-               '<button onclick="crossbeamsActionCall(this)" class="dropbtn">Actions</button>' +
-               '<div class="dropdown-content">';
-  params.value.forEach(function(item) {
-    url_components = item.url.split("$");
-    url = "";
-    url_components.forEach(function(cmp, index) {
-      if(index % 2 == 0) {
-        url += cmp;
-      } else {
-        console.log(cmp);
-        console.log(params.data[item[cmp]]);
-        url += params.data[item[cmp]];
-      }
-    });
-    rend += '<a href="' + url + '">' + item.text + '</a>';
-  });
-  return rend + "</div></div>";
-// 
-//   <button onclick="myFunction()" class="dropbtn">Dropdown</button>
-//   <div id="myDropdown" class="dropdown-content">
-//     <a href="#">Link 1</a>
-//     <a href="#">Link 2</a>
-//     <a href="#">Link 3</a>
-//   </div>
-// </div>
-  // <ul class="dropdown">
-  // <li>
-  //   <a href="…">Page 1</a>
-  //   <ul>
-  //     <li>
-  //       <a href="…">Sub-page 1.1</a>
-  //     </li>
-  //     <li>
-  //       <a href="…">Sub-page 1.2</a>
-  //     </li>
-  //   </ul>
-  // </li><li>
-  //   <a href="…">Page 2</a>
-  //   <ul>
-  //     <li>
-  //       <a href="…">Sub-page 2.1</a>
-  //     </li>
-  //     <li>
-  //       <a href="…">Sub-page 2.2</a>
-  //     </li>
-  //   </ul>
-  // </li>
-  //   </ul>
-  // console.log('Params val:', params.value);
-  // var url_components = params.value.url.split("$");
-  // var url = "";
-  // url_components.forEach(function(cmp, index) {
-  //   if(index % 2 == 0) {
-  //     url += cmp;
-  //   } else {
-  //     console.log(cmp);
-  //     console.log(params.data[params.value[cmp]]);
-  //     url += params.data[params.value[cmp]];
-  //   }
-  // });
-  // // return "<button>"+params.value.text+"</button>";
-  // return "<button>" + url + "</button>";
-};
-
-var cmenuActionsRenderer = function(params) {
-  // params value should always be an array.
-  // if empty, render ''
-  if(params.value.length === 0) { return ''; }
-
-  console.log(params.context, params.rowIndex, params.value);
-  console.log(JSON.stringify(params.value));
-  // Create html element & add data row reference....
-    return "<button class='grid-context-menu' data-row='"+JSON.stringify(params.value)+"'>list</button>";
-  // grid id, row id.
-};
-var dmenuActionsRenderer = function(params) {
-  // params value should always be an array.
-  // if empty, render ''
-  if(params.value.length === 0) { return ''; }
-  var items = [];
-  var url_components;
-  var url;
-  params.value.forEach(function(item) {
-    url_components = item.url.split("$");
-    url = "";
-    url_components.forEach(function(cmp, index) {
-     if(index % 2 == 0) {
-        url += cmp;
-      } else {
-        console.log(cmp);
-        // console.log(params.data[item[cmp]]); // Get row data from grid first...
-        url += params.data[item[cmp]];
-      }
-    });
-    items.push({name: item.text, url: url, prompt: item.prompt, method: item.method});
-  });
-    return "<button class='grid-context-menu' data-row='"+JSON.stringify(items)+"'>list</button>";
-  // var theBtn = document.createElement('button');
-  // theBtn.classList.add('grid-context-menu');
-  // theBtn.textContent ='list';
-  // theBtn.dataset.row = JSON.stringify(params.value);
-  // theBtn.gridrow = params.data;
-  // return theBtn;
-  // unpack value + row & gen new version of params.
-  //valueGetter:
-  // [
-  //   {text:"Edit", url: "/masterfiles/users/users/$col$/edit", col: "id"},
-  //   {text:"Delete", url: "/masterfiles/users/users/$col$/delete|Are you sure?", col: "id"}
-  // ]
-  // var eDiv = document.createElement('div');
-    // eDiv.innerHTML = '<span class="my-css-class"><button class="btn-simple">Push Me</button></span>';
-    // var eButton = eDiv.querySelectorAll('.btn-simple')[0];
-    //
-    // var eButton.addEventListener('click', function() {
-    //           console.log('button was clicked!!');
-    //       });
-    //
-    // return eDiv;
-};
 
     //hs = {id: row['program_id'], functional_area_name: row['functional_area_name'], program_name: row['program_name'], active: row['p_active'], created_at: row['p_created_at'], updated_at: row['updated_at'],
 var masterColumnDefs = [
   {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,
     // "valueGetter":"[{text:'Edit', url:'/masterfiles/users/users/'+data.id+'/edit|edit'},{text:'Delete', url: '/masterfiles/users/users/'+data.id+'|delete|Are you sure?'}]",
     "colId":"link_1",
-    valueGetter:'[{text:"Edit", url: "/masterfiles/users/users/$col$/edit", col: "id"},{text:"Delete", url: "/masterfiles/users/users/$col$/delete", prompt: "Are you sure?", col: "id", method: "delete", title: "Functional Area"}]',
+    valueGetter:'[{text:"Edit", url: "/security/functional_areas/functional_areas/$col$/edit", col: "id"},{text:"Delete", url: "/masterfiles/users/users/$col$/delete", prompt: "Are you sure?", col: "id", method: "delete", title: "Functional Area"}]',
     // valueGetter:'[]',
     "cellRenderer": crossbeamsGridFormatters.menuActionsRenderer},
 
@@ -1734,9 +1582,9 @@ var midLevelColumnDefs = [
   {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,
     // "valueGetter":"[{text:'Edit', url:'/masterfiles/users/users/'+data.id+'/edit|edit'},{text:'Delete', url: '/masterfiles/users/users/'+data.id+'|delete|Are you sure?'}]",
     "colId":"link_1",
-    valueGetter:'[{text:"Edit", url: "/masterfiles/users/users/$col$/edit", col: "id"},{text:"Delete", url: "/masterfiles/users/users/$col$/delete|Are you sure?", col: "id"}]',
+    valueGetter:'[{text:"Edit", url: "/masterfiles/users/users/$col$/edit", col: "id"},{text:"Delete", url: "/masterfiles/users/users/$col$/delete", prompt: "Are you sure?", col: "id"}]',
     // valueGetter:'[]',
-    "cellRenderer":dmenuActionsRenderer},
+    "cellRenderer": crossbeamsGridFormatters.menuActionsRenderer},
   {headerName: 'Program', field: 'program_name',
     // left column is going to act as group column, with the expand / contract controls
     cellRenderer: 'group',
@@ -1756,9 +1604,9 @@ var detailColumnDefs = [
   {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,
     // "valueGetter":"[{text:'Edit', url:'/masterfiles/users/users/'+data.id+'/edit|edit'},{text:'Delete', url: '/masterfiles/users/users/'+data.id+'|delete|Are you sure?'}]",
     "colId":"link_1",
-    valueGetter:'[{text:"Edit", url: "/masterfiles/users/users/$col$/edit", col: "id"},{text:"Delete", url: "/masterfiles/users/users/$col$/delete|Are you sure?", col: "id"}]',
+    valueGetter:'[{text:"Edit", url: "/masterfiles/users/users/$col$/edit", col: "id"},{text:"Delete", url: "/masterfiles/users/users/$col$/delete", prompt: "Are you sure?", col: "id"}]',
     // valueGetter:'[]',
-    "cellRenderer":dmenuActionsRenderer},
+    "cellRenderer": crossbeamsGridFormatters.menuActionsRenderer},
   // {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'/edit|edit'","colId":"link_0","cellRenderer":crossbeamsGridFormatters.hrefSimpleFormatter},
   // {"headerName":"","width":60,"suppressMenu":true,"suppressSorting":true,"suppressMovable":true,"suppressFilter":true,"enableRowGroup":false,"enablePivot":false,"enableValue":false,"suppressCsvExport":true,"suppressToolPanel":true,"valueGetter":"'/masterfiles/users/users/'+data.id+'|delete|Are you sure?'","colId":"link_1","cellRenderer":crossbeamsGridFormatters.hrefPromptFormatter},
   {headerName: 'Program function name', field: 'program_function_name'},

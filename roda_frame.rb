@@ -27,6 +27,7 @@ require './repositories/program_function_repo'
 # require './repositories/payment_term_repo'
 require './repositories/warehouse/book_repo' # pretend warehouse repo.
 require './lib/db_connections'
+Dir['./persistence/changesets/*.rb'].each { |f| require f }
 # require './models'
 
 
@@ -51,6 +52,7 @@ class RodaFrame < Roda
 
   plugin :data_grid, path: File.dirname(__FILE__),
                      list_url: '/list/%s/grid',
+                     list_nested_url: '/list/%s/nested_grid',
                      search_url: '/search/%s/grid',
                      filter_url: '/search/%s',
                      run_search_url: '/search/%s/run',
@@ -62,7 +64,8 @@ class RodaFrame < Roda
   plugin :view_subdirs
   plugin :multi_route
   plugin :content_for, :append=>true
-  plugin :indifferent_params
+  # plugin :indifferent_params # - allows access to params by string or symbol.
+  plugin :symbolized_params    # - automatically converts all keys of params to symbols.
   plugin :flash
   plugin :csrf, raise: true # , :skip => ['POST:/report_error'] # FIXME: Remove the +raise+ param when going live!
     plugin :rodauth do
@@ -247,6 +250,11 @@ class RodaFrame < Roda
         r.on 'grid' do
           response['Content-Type'] = 'application/json'
           render_data_grid_rows(id)
+        end
+
+        r.on 'nested_grid' do
+          response['Content-Type'] = 'application/json'
+          render_data_grid_nested_rows(id)
         end
       end
     end
