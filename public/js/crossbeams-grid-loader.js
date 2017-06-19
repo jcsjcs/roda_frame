@@ -223,10 +223,12 @@ const crossbeamsGridFormatters = {
     let url;
     valueObj.forEach((item) => {
       if (item.is_separator) {
-        if (items.length > 1 && _.last(items).value !== '---') {
+        if (items.length > 0 && _.last(items).value !== '---') {
           items.push({ name: item.text, value: '---' });
         }
       } else if (item.hide_if_null && params.data[item.hide_if_null] === null) {
+        // No show of item
+      } else if (item.hide_if_present && params.data[item.hide_if_present] !== null) {
         // No show of item
       } else {
         urlComponents = item.url.split('$');
@@ -243,6 +245,7 @@ const crossbeamsGridFormatters = {
           prompt: item.prompt,
           method: item.method,
           title: item.title,
+          icon: item.icon,
         });
       }
     });
@@ -789,6 +792,7 @@ $(() => {
             prompt: item.prompt,
             method: item.method,
             title: item.title,
+            icon: item.icon,
             is_separator: item.is_separator,
           };
         }
@@ -803,8 +807,9 @@ $(() => {
               window.location = item.url;
             } else {
               document.body.innerHTML += `<form id="dynForm" action="${item.url}" method="post">
-                <input name="_method" type="hidden" value="${item.method}" /></form>`;
-              document.getElementById('dynForm').submit();
+                <input name="_method" type="hidden" value="${item.method}" />
+                <input name="_csrf" type="hidden" value="${document.querySelector('meta[name="_csrf"]').content}" /></form>`;
+              document.getElementById('dynForm').submit(); // TODO: csrf...
             }
           };
           if (item.prompt !== undefined) {

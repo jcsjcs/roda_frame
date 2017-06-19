@@ -1,7 +1,7 @@
 require 'rom-repository'
 
 class ProgramFunctionRepo < ROM::Repository[:program_functions]
-  commands :create
+  commands :create, update: :by_pk, delete: :by_pk
 
   def menu_for_user(user)
     query = <<-EOQ

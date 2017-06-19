@@ -1,7 +1,7 @@
 require 'rom-repository'
 
 class ProgramRepo < ROM::Repository[:programs]
-  commands :create
+  commands :create, update: :by_pk, delete: :by_pk
 
   def authorise?(user, programs, sought_permission)
     query = <<-EOQ

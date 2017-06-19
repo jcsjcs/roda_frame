@@ -44,6 +44,7 @@ class RodaFrame < Roda
   include CommonHelpers
 
   use Rack::Session::Cookie, secret: "some_nice_long_random_string_DSKJH4378EYR7EGKUFH", key: "_myapp_session"
+  use Rack::MethodOverride # USe with all_verbs plugin to allow "r.delete" etc.
   use Crossbeams::RackMiddleware::Banner, template: 'views/_page_banner.erb'#, session: request.session
   # use Crossbeams::DataminerInterface::App, url_prefix: 'dataminer/', dm_reports_location: '/home/james/ra/roda_frame/reports',
   use Crossbeams::DataminerInterface::App, url_prefix: 'dataminer/',
@@ -57,6 +58,7 @@ class RodaFrame < Roda
                      filter_url: '/search/%s',
                      run_search_url: '/search/%s/run',
                      run_to_excel_url: '/search/%s/xls'
+  plugin :all_verbs
   plugin :render
   plugin :partials
   plugin :assets, css: 'style.scss'#, js: 'behave.js'
