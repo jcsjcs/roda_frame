@@ -12,6 +12,7 @@ gem 'pg'
 gem 'sass'
 gem 'tilt'
 gem 'roda-symbolized_params'
+gem 'dry-validation'
 
 gem 'crossbeams-dataminer',           path: File.expand_path('../../crossbeams/crossbeams-dataminer', __FILE__)
 gem 'crossbeams-layout',              path: File.expand_path('../../crossbeams/crossbeams-layout', __FILE__)

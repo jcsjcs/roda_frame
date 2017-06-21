@@ -193,7 +193,13 @@ input, textarea, select {
   padding-left: 0.4em;
 }
 
+.crossbeams-form-error {
+  color: brown;
+}
 
+.crossbeams-div-error {
+  background-color: #fee;
+}
 
 /* label state styles - relies on label placed after input in form...*/
 .crossbeams-form input:focus ~ label, .crossbeams-form textarea:focus ~ label, .crossbeams-form select:focus ~ label {

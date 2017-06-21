@@ -90,6 +90,9 @@
       <% if flash[:notice] %>
         Jackbox.success('<%= flash[:notice].tr("'", "`") %>');
       <% end %>
+      <% if flash[:error] %>
+        Jackbox.error('<%= flash[:error].tr("'", "`") %>', { time: 20 });
+      <% end %>
 
       // const choices = new Choices('.searchable-select', {removeItemButton: true, fuseOptions: {threshold: 0.0, distance: 0}});
     </script>

@@ -13,6 +13,7 @@ require 'crossbeams/label_designer'
 require 'crossbeams/rack_middleware'
 require 'yaml'
 require 'base64'
+require 'dry-validation'
 #require 'pry'
 
 Dir['./helpers/**/*.rb'].each { |f| require f }

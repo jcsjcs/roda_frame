@@ -2,7 +2,7 @@ module Security
   module FunctionalAreas
     module ProgramFunctions
       class New
-        def self.call(id) # TODO: handle re-display on validation error...
+        def self.call(id, form_values = nil, form_errors = nil)
 
           rules = { fields: {
             program_id: { renderer: :hidden },
@@ -22,6 +22,8 @@ module Security
                                             program_function_sequence: nil,
                                             restricted_user_access: false,
                                             active: true))
+            page.form_values form_values
+            page.form_errors form_errors
             page.form do |form|
               form.action '/security/functional_areas/program_functions/create'
               form.add_field :program_id

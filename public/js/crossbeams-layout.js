@@ -45,15 +45,34 @@
     }, 0); // Disable the button with a delay so the form still submits...
   }
 
-  // // Remove disabled state from button
-  // function revertDisabledButton(element) {
-  //   element.disabled = false;
-  //   element.value = element.dataset.enableWith;
-  //   element.classList.add('dim');
-  //   element.classList.remove('o-50');
-  // }
+  /**
+   * Remove disabled state from a button.
+   * @param {element} element the button to re-enable.
+   * @returns {void}
+   */
+  function revertDisabledButton(element) {
+    console.log('I got called');
+    element.disabled = false;
+    element.value = element.dataset.enableWith;
+    element.classList.add('dim');
+    element.classList.remove('o-50');
+  }
 
-  // Assign click handler to buttons that need to be disabled.
+  /**
+   * When an input is invalid according to HTML5 rules and
+   * the submit button has been disabled, we need to re-enable it
+   * so the user can re-submit the form once the error has been
+   * corrected.
+   */
+  document.addEventListener('invalid', function(e){
+    window.setTimeout(() => {
+      e.target.form.querySelectorAll('[disabled]').forEach( (el) => revertDisabledButton(el) );
+    }, 0); // Disable the button with a delay so the form still submits...
+  }, true);
+
+  /**
+   * Assign a click handler to buttons that need to be disabled.
+   */
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-disable-with]').forEach((element) => {
       element.onclick = preventMultipleSubmits;

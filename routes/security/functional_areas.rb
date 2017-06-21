@@ -5,23 +5,28 @@ class RodaFrame < Roda
   route 'functional_areas', 'security' do |r|
     # --- see empty root plugin...
     r.on 'functional_areas' do
-      r.root do
-        render(inline: '<h2>functional_areas</h2>')
-        # view(inline: UserRepo.new(DB.db).index.map do |c|
-        #   "#{c[:id]} : #{c[:user_name]}"
-        # end.inspect)
-      end
+      # r.root do
+      #   render(inline: '<h2>functional_areas</h2>')
+      # end
       r.on 'new' do
         show_page { Security::FunctionalAreas::FunctionalAreas::New.call }
       end
       r.on 'create' do
-        repo = FunctionalAreaRepo.new(DB.db)
-        # changeset = repo.changeset(params[:functional_area]).map(:add_timestamps)
-        changeset = repo.changeset(NewChangeset).data(params[:functional_area])
-        repo.create(changeset)
-        flash[:notice] = 'Created'
-        redirect_to_last_grid(r)
-        # view(inline: "Func.Area.create - should not be GET: RES: #{res.class} #{res.inspect} | #{changeset.to_h.inspect}")
+        schema = Dry::Validation.Schema do
+          required(:functional_area_name).filled(:str?)
+        end
+        errors = schema.call(params[:functional_area]).messages
+        if errors.empty?
+          repo = FunctionalAreaRepo.new(DB.db)
+          # changeset = repo.changeset(params[:functional_area]).map(:add_timestamps)
+          changeset = repo.changeset(NewChangeset).data(params[:functional_area])
+          repo.create(changeset)
+          flash[:notice] = 'Created'
+          redirect_to_last_grid(r)
+        else
+          flash.now[:error] = 'Unable to create functional area'
+          show_page { Security::FunctionalAreas::FunctionalAreas::New.call(params[:functional_area], errors) }
+        end
       end
       r.on :id do |id|
         # r.get true do
@@ -32,20 +37,23 @@ class RodaFrame < Roda
         end
         r.post do
           r.on 'update' do
-            # TODO:
-            # - valdate params
-            # - update database
-            # - redirect somewhere (list/view/next step)
-            # - OR re-display edit with errors
-            repo = FunctionalAreaRepo.new(DB.db)
-            # obj  = repo.functional_areas.by_pk(id).one
-            puts ">>> FA parmtype: #{params[:functional_area].class}, #{params[:functional_area].inspect}"
-            changeset = repo.changeset(id, params[:functional_area]).map(:touch)
-            # repo.update(id, params[:functional_area])
-            # changeset = repo.changeset(id, UpdateChangeset).data(params[:functional_area])
-            repo.update(id, changeset)
-            flash[:notice] = 'Updated'
-            redirect_to_last_grid(r)
+            schema = Dry::Validation.Schema do
+              required(:functional_area_name).filled(:str?)
+            end
+            errors = schema.call(params[:functional_area]).messages
+
+            if errors.empty?
+              repo = FunctionalAreaRepo.new(DB.db)
+              changeset = repo.changeset(id, params[:functional_area]).map(:touch)
+              # repo.update(id, params[:functional_area])
+              # changeset = repo.changeset(id, UpdateChangeset).data(params[:functional_area])
+              repo.update(id, changeset)
+              flash[:notice] = 'Updated'
+              redirect_to_last_grid(r)
+            else
+              flash.now[:error] = 'Unable to update functional area'
+              show_page { Security::FunctionalAreas::FunctionalAreas::Edit.call(id, params[:functional_area], errors) }
+            end
 
             # view(inline: "Func.Area UPDATE<p>#{params[:functional_area].inspect} | #{changeset.to_h.inspect}</p>")
           end
@@ -62,12 +70,21 @@ class RodaFrame < Roda
 
     r.on 'programs' do
       r.on 'create' do
-        repo = ProgramRepo.new(DB.db)
-        # changeset = repo.changeset(params[:functional_area]).map(:add_timestamps)
-        changeset = repo.changeset(NewChangeset).data(params[:program])
-        repo.create(changeset)
-        flash[:notice] = 'Created'
-        r.redirect '/list/menu_definitions'
+        schema = Dry::Validation.Schema do
+          required(:program_name).filled(:str?)
+        end
+        errors = schema.call(params[:program]).messages
+        if errors.empty?
+          repo = ProgramRepo.new(DB.db)
+          # changeset = repo.changeset(params[:functional_area]).map(:add_timestamps)
+          changeset = repo.changeset(NewChangeset).data(params[:program])
+          repo.create(changeset)
+          flash[:notice] = 'Created'
+          r.redirect '/list/menu_definitions'
+        else
+          flash.now[:error] = 'Unable to create program'
+          show_page { Security::FunctionalAreas::Programs::New.call(params[:program][:functional_area_id], params[:program], errors) }
+        end
       end
       r.on :id do |id|
         r.on 'new' do
@@ -78,12 +95,21 @@ class RodaFrame < Roda
         end
         r.post do
           r.on 'update' do
-            repo = ProgramRepo.new(DB.db)
-            changeset = repo.changeset(id, params[:program]).map(:touch)
-            # changeset = repo.changeset(id, UpdateChangeset).data(params[:functional_area])
-            repo.update(id, changeset)
-            flash[:notice] = 'Updated'
-            redirect_to_last_grid(r)
+            schema = Dry::Validation.Schema do
+              required(:program_name).filled(:str?)
+            end
+            errors = schema.call(params[:program]).messages
+            if errors.empty?
+              repo = ProgramRepo.new(DB.db)
+              changeset = repo.changeset(id, params[:program]).map(:touch)
+              # changeset = repo.changeset(id, UpdateChangeset).data(params[:functional_area])
+              repo.update(id, changeset)
+              flash[:notice] = 'Updated'
+              redirect_to_last_grid(r)
+            else
+              flash.now[:error] = 'Unable to update program'
+              show_page { Security::FunctionalAreas::Programs::Edit.call(id, params[:program], errors) }
+            end
           end
         end
         r.delete do
@@ -97,12 +123,25 @@ class RodaFrame < Roda
 
     r.on 'program_functions' do
       r.on 'create' do
-        repo = ProgramFunctionRepo.new(DB.db)
-        # changeset = repo.changeset(params[:functional_area]).map(:add_timestamps)
-        changeset = repo.changeset(NewChangeset).data(params[:program_function])
-        repo.create(changeset)
-        flash[:notice] = 'Created'
-        r.redirect '/list/menu_definitions'
+        schema = Dry::Validation.Schema do
+          required(:program_function_name).filled(:str?)
+          required(:url).filled(:str?)
+          required(:program_function_sequence).filled(:int?)
+        end
+        errors = schema.call(params[:program_function]).messages
+        if errors.empty?
+          repo = ProgramFunctionRepo.new(DB.db)
+          # changeset = repo.changeset(params[:functional_area]).map(:add_timestamps)
+          changeset = repo.changeset(NewChangeset).data(params[:program_function])
+          repo.create(changeset)
+          flash[:notice] = 'Created'
+          r.redirect '/list/menu_definitions'
+        else
+          # TODO: might work better with a redirect?
+          flash.now[:error] = 'Unable to create program function'
+          show_page { Security::FunctionalAreas::ProgramFunctions::New.call(params[:program_function][:program_id],
+                                                                            params[:program_function], errors) }
+        end
       end
       r.on :id do |id|
         r.on 'new' do
