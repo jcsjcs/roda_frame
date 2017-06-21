@@ -36,4 +36,8 @@ module CommonHelpers
     # current_user # && current_user[:department_name] == 'IT'
   end
 
+  def redirect_to_last_grid(r)
+    r.redirect session[:last_grid_url]
+  end
+
 end

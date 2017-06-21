@@ -246,6 +246,7 @@ class RodaFrame < Roda
     r.on 'list' do
       r.on :id do |id|
         r.is do
+          session[:last_grid_url] = "/list/#{id}"
           show_page { render_data_grid_page(id) }
         end
 
@@ -269,6 +270,7 @@ class RodaFrame < Roda
         end
 
         r.on 'run' do
+          session[:last_grid_url] = "/search/#{id}?back=y"
           show_page { render_search_grid_page(id, params) }
         end
 

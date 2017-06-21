@@ -453,7 +453,7 @@ Level2PanelCellRenderer.prototype.getTemplate = function getTemplate(params) {
     '  <div class="full-width-grid-toolbar">' +
     '       <b>Functional area: </b>' + parentRecord.functional_area_name + // TODO: ................
     '       <input class="full-width-search" placeholder="Search..."/>' +
-    '       <button>Add a Program</button>' +
+    '       <a href="/security/functional_areas/programs/$:functional_area_id$/new">Add a Program</a>' +
     '  </div>' +
     '</div>';
 

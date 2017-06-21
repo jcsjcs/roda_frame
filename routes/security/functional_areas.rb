@@ -20,7 +20,7 @@ class RodaFrame < Roda
         changeset = repo.changeset(NewChangeset).data(params[:functional_area])
         repo.create(changeset)
         flash[:notice] = 'Created'
-        r.redirect '/list/menu_definitions'
+        redirect_to_last_grid(r)
         # view(inline: "Func.Area.create - should not be GET: RES: #{res.class} #{res.inspect} | #{changeset.to_h.inspect}")
       end
       r.on :id do |id|
@@ -45,7 +45,7 @@ class RodaFrame < Roda
             # changeset = repo.changeset(id, UpdateChangeset).data(params[:functional_area])
             repo.update(id, changeset)
             flash[:notice] = 'Updated'
-            r.redirect '/list/menu_definitions'
+            redirect_to_last_grid(r)
 
             # view(inline: "Func.Area UPDATE<p>#{params[:functional_area].inspect} | #{changeset.to_h.inspect}</p>")
           end
@@ -54,7 +54,7 @@ class RodaFrame < Roda
           repo = FunctionalAreaRepo.new(DB.db)
           repo.delete(id)
           flash[:notice] = 'Deleted'
-          r.redirect '/list/menu_definitions'
+          redirect_to_last_grid(r)
           # view(inline: 'POST via DELETE - Func.Area DELETE')
         end
       end
@@ -83,14 +83,14 @@ class RodaFrame < Roda
             # changeset = repo.changeset(id, UpdateChangeset).data(params[:functional_area])
             repo.update(id, changeset)
             flash[:notice] = 'Updated'
-            r.redirect '/list/menu_definitions'
+            redirect_to_last_grid(r)
           end
         end
         r.delete do
           repo = ProgramRepo.new(DB.db)
           repo.delete(id)
           flash[:notice] = 'Deleted'
-          r.redirect '/list/menu_definitions'
+          redirect_to_last_grid(r)
         end
       end
     end
@@ -118,14 +118,14 @@ class RodaFrame < Roda
             # changeset = repo.changeset(id, UpdateChangeset).data(params[:functional_area])
             repo.update(id, changeset)
             flash[:notice] = 'Updated'
-            r.redirect '/list/menu_definitions'
+            redirect_to_last_grid(r)
           end
         end
         r.delete do
           repo = ProgramFunctionRepo.new(DB.db)
           repo.delete(id)
           flash[:notice] = 'Deleted'
-          r.redirect '/list/menu_definitions'
+          redirect_to_last_grid(r)
         end
       end
     end

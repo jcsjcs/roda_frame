@@ -65,7 +65,7 @@
     :data_type: :string
     :width: 
     :format: 
-    :hide: 'false'
+    :hide: false
     :groupable: true
     :group_by_seq: 1
     :group_sum: false
