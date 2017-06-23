@@ -271,7 +271,7 @@ class RodaFrame < Roda
         end
 
         r.on 'run' do
-          session[:last_grid_url] = "/search/#{id}?back=y"
+          session[:last_grid_url] = "/search/#{id}?rerun=y"
           show_page { render_search_grid_page(id, params) }
         end
 
