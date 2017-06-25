@@ -210,6 +210,56 @@ const crossbeamsGridFormatters = {
     return `<b>${params.value.toUpperCase()}</b>`;
   },
 
+  makeContextNode: function makeContextNode(items, item, params) {
+    let node = {};
+    let urlComponents;
+    let url;
+    if (item.is_separator) {
+      if (items.length > 0 && _.last(items).value !== '---') {
+        return { name: item.text, value: '---' };
+      } else {
+        return null;
+      }
+    } else if (item.hide_if_null && params.data[item.hide_if_null] === null) {
+      // No show of item
+      return null;
+    } else if (item.hide_if_present && params.data[item.hide_if_present] !== null) {
+      // No show of item
+      return null;
+    } else if (item.is_submenu) {
+      node = { name: item.text, items: [] };
+      item.items.forEach((subitem) => {
+        subnode = crossbeamsGridFormatters.makeContextNode(node.items, subitem, params);
+        if (subnode !== null) {
+          node.items.push(subnode);
+        }
+      });
+      node.items = _.dropRightWhile(node.items, ['value', '---']);
+      if (node.items.length > 0) {
+        return node;
+      } else {
+        return null;
+      }
+    } else {
+      urlComponents = item.url.split('$');
+      url = '';
+      urlComponents.forEach((cmp, index) => {
+        if (index % 2 === 0) {
+          url += cmp;
+        } else {
+          url += params.data[item[cmp]];
+        }
+      });
+      return { name: item.text,
+        url,
+        prompt: item.prompt,
+        method: item.method,
+        title: item.title,
+        icon: item.icon,
+      };
+    }
+  },
+
   menuActionsRenderer: function menuActionsRenderer(params) {
     if (!params.data) { return null; }
     let valueObj = params.value;
@@ -219,34 +269,11 @@ const crossbeamsGridFormatters = {
     if (valueObj.length === 0) { return ''; }
 
     let items = [];
-    let urlComponents;
-    let url;
+    let node;
     valueObj.forEach((item) => {
-      if (item.is_separator) {
-        if (items.length > 0 && _.last(items).value !== '---') {
-          items.push({ name: item.text, value: '---' });
-        }
-      } else if (item.hide_if_null && params.data[item.hide_if_null] === null) {
-        // No show of item
-      } else if (item.hide_if_present && params.data[item.hide_if_present] !== null) {
-        // No show of item
-      } else {
-        urlComponents = item.url.split('$');
-        url = '';
-        urlComponents.forEach((cmp, index) => {
-          if (index % 2 === 0) {
-            url += cmp;
-          } else {
-            url += params.data[item[cmp]];
-          }
-        });
-        items.push({ name: item.text,
-          url,
-          prompt: item.prompt,
-          method: item.method,
-          title: item.title,
-          icon: item.icon,
-        });
+      node = crossbeamsGridFormatters.makeContextNode(items, item, params);
+      if (node !== null) {
+        items.push(node);
       }
     });
     // If items are hidden, the last item(s) could be separators.
@@ -794,6 +821,8 @@ $(() => {
             title: item.title,
             icon: item.icon,
             is_separator: item.is_separator,
+            is_submenu: item.is_submenu,
+            items: item.items,
           };
         }
       });
