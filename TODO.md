@@ -60,3 +60,10 @@ usr_hash = {login_name: 'james',
 user_repo.create(usr_hash)
 ~~~
 
+# Dry validation
+
+* Input from forms must use Form, not Schema
+* Use the resul.to_h hash instead of params to do updating.
+* Therefore all form inputs **must** be listed - even if they're optional - and expected types given.
+* Use specific data types for validation of numerics (int, float, decimal).
+

@@ -35,6 +35,11 @@ class RodaFrame < Roda
         r.on 'edit' do
           show_page { Security::FunctionalAreas::FunctionalAreas::Edit.call(id) }
         end
+        # define a routes result object:
+        # - success?
+        # - flash_message - or should the action do this?
+        # - errors
+        # - result
         r.post do
           r.on 'update' do
             schema = Dry::Validation.Schema do
@@ -123,16 +128,21 @@ class RodaFrame < Roda
 
     r.on 'program_functions' do
       r.on 'create' do
-        schema = Dry::Validation.Schema do
+        schema = Dry::Validation.Form do
           required(:program_function_name).filled(:str?)
           required(:url).filled(:str?)
           required(:program_function_sequence).filled(:int?)
+          required(:program_id).filled(:int?) # Hidden parameter
+          required(:group_name).maybe(:str?)
+          required(:restricted_user_access).filled(:bool?)
+          required(:active).filled(:bool?)
         end
-        errors = schema.call(params[:program_function]).messages
+        result = schema.call(params[:program_function])
+        errors = result.messages
         if errors.empty?
           repo = ProgramFunctionRepo.new(DB.db)
           # changeset = repo.changeset(params[:functional_area]).map(:add_timestamps)
-          changeset = repo.changeset(NewChangeset).data(params[:program_function])
+          changeset = repo.changeset(NewChangeset).data(result.to_h) # + hidden params...
           repo.create(changeset)
           flash[:notice] = 'Created'
           r.redirect '/list/menu_definitions'
@@ -152,12 +162,28 @@ class RodaFrame < Roda
         end
         r.post do
           r.on 'update' do
-            repo = ProgramFunctionRepo.new(DB.db)
-            changeset = repo.changeset(id, params[:program_function]).map(:touch)
-            # changeset = repo.changeset(id, UpdateChangeset).data(params[:functional_area])
-            repo.update(id, changeset)
-            flash[:notice] = 'Updated'
-            redirect_to_last_grid(r)
+            schema = Dry::Validation.Form do
+              required(:program_function_name).filled(:str?)
+              required(:url).filled(:str?)
+              required(:program_function_sequence).filled(:int?)
+              required(:group_name).maybe(:str?)
+              required(:restricted_user_access).filled(:bool?)
+              required(:active).filled(:bool?)
+            end
+            result = schema.call(params[:program_function])
+            errors = result.messages
+            if errors.empty?
+              repo = ProgramFunctionRepo.new(DB.db)
+              changeset = repo.changeset(id, result.to_h).map(:touch)
+              # changeset = repo.changeset(id, UpdateChangeset).data(result.to_h)
+              repo.update(id, changeset)
+              flash[:notice] = 'Updated'
+              redirect_to_last_grid(r)
+            else
+              flash.now[:error] = 'Unable to create program function'
+              show_page { Security::FunctionalAreas::ProgramFunctions::Edit.call(id,
+                                                                                params[:program_function], errors) }
+            end
           end
         end
         r.delete do
