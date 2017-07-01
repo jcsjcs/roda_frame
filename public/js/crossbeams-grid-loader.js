@@ -210,13 +210,19 @@ const crossbeamsGridFormatters = {
     return `<b>${params.value.toUpperCase()}</b>`;
   },
 
-  makeContextNode: function makeContextNode(items, item, params) {
+  nextChar: function nextChar(c) {
+    return String.fromCharCode(c.charCodeAt(0) + 1);
+  },
+
+  makeContextNode: function makeContextNode(key, prefix, items, item, params) {
     let node = {};
     let urlComponents;
     let url;
+    let subKey = 'a';
+    let subPrefix = '';
     if (item.is_separator) {
       if (items.length > 0 && _.last(items).value !== '---') {
-        return { name: item.text, value: '---' };
+        return { key: `${prefix}${key}`, name: item.text, value: '---' };
       } else {
         return null;
       }
@@ -227,9 +233,11 @@ const crossbeamsGridFormatters = {
       // No show of item
       return null;
     } else if (item.is_submenu) {
-      node = { name: item.text, items: [] };
+      node = { key: `${prefix}${key}`, name: item.text, items: [], is_submenu: true };
       item.items.forEach((subitem) => {
-        subnode = crossbeamsGridFormatters.makeContextNode(node.items, subitem, params);
+        subKey = crossbeamsGridFormatters.nextChar(subKey);
+        subPrefix = `${prefix}${key}_`;
+        subnode = crossbeamsGridFormatters.makeContextNode(subKey, subPrefix, node.items, subitem, params);
         if (subnode !== null) {
           node.items.push(subnode);
         }
@@ -250,7 +258,8 @@ const crossbeamsGridFormatters = {
           url += params.data[item[cmp]];
         }
       });
-      return { name: item.text,
+      return { key: `${prefix}${key}`,
+        name: item.text,
         url,
         prompt: item.prompt,
         method: item.method,
@@ -270,8 +279,11 @@ const crossbeamsGridFormatters = {
 
     let items = [];
     let node;
+    let prefix = '';
+    let key = 'a';
     valueObj.forEach((item) => {
-      node = crossbeamsGridFormatters.makeContextNode(items, item, params);
+      key = crossbeamsGridFormatters.nextChar(key);
+      node = crossbeamsGridFormatters.makeContextNode(key, prefix, items, item, params);
       if (node !== null) {
         items.push(node);
       }
@@ -798,6 +810,29 @@ Level3PanelCellRenderer.prototype.consumeMouseWheelOnDetailGrid = function consu
 }).call(this);
 
 $(() => {
+
+  buildSubMenuItems = (subs) => {
+    let itemSet = {};
+    if(subs) {
+      subs.forEach((sub) => {
+        itemSet[sub.key] = sub;
+      });
+    }
+    return itemSet;
+  };
+
+  getItemFromTree = (key, items) => {
+    let keyList = key.split('_');
+    let currKey = keyList.shift();
+    let node = items[currKey];
+    let subKey = currKey;
+    while (keyList.length > 0) {
+      subKey = `${currKey}_${keyList.shift()}`
+      node = node.items[subKey];
+    }
+    return node;
+  };
+
   $.contextMenu({
     selector: '.grid-context-menu',
     trigger: 'left',
@@ -811,9 +846,9 @@ $(() => {
       const items = {};
       JSON.parse(row).forEach((item) => {
         if (item.value && item.value === '---') {
-          items[item.name] = '---';
+          items[item.key] = '---';
         } else {
-          items[item.name] = {
+          items[item.key] = {
             name: item.value ? item.value : item.name,
             url: item.url,
             prompt: item.prompt,
@@ -822,15 +857,16 @@ $(() => {
             icon: item.icon,
             is_separator: item.is_separator,
             is_submenu: item.is_submenu,
-            items: item.items,
           };
+          if (item.is_submenu) {
+            items[item.key].items = buildSubMenuItems(item.items);
+          }
         }
       });
 
       return {
-        // callback: (key, options) => {
-        callback: (key) => {
-          const item = items[key];
+        callback: (key, options) => {
+          const item = getItemFromTree(key, items);
           const caller = () => {
             if (item.method === undefined) {
               window.location = item.url;
