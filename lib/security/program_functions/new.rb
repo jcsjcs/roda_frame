@@ -4,10 +4,11 @@ module Security
       class New
         def self.call(id, form_values = nil, form_errors = nil)
 
+          this_repo = ProgramFunctionRepo.new(DB.db)
           rules = { fields: {
             program_id: { renderer: :hidden },
             program_function_name: { },
-            group_name: { },
+            group_name: { datalist: this_repo.groups_for(id) },
             url: { },
             program_function_sequence: { renderer: :number },
             restricted_user_access: { renderer: :checkbox },

@@ -8,7 +8,7 @@ module Security
           obj     = this_repo.program_functions.by_pk(id).one
           rules = { fields: {
             program_function_name: { },
-            group_name: { },
+            group_name: { datalist: this_repo.groups_for(obj.program_id) },
             url: { },
             program_function_sequence: { renderer: :number },
             restricted_user_access: { renderer: :checkbox },

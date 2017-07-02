@@ -23,4 +23,14 @@ class ProgramFunctionRepo < ROM::Repository[:program_functions]
     EOQ
     DB.base[query].all
   end
+
+  def groups_for(program_id)
+    query = <<-EOQ
+    SELECT DISTINCT group_name
+    FROM program_functions
+    WHERE program_id = #{program_id}
+    ORDER BY group_name
+    EOQ
+    DB.base[query].map { |r| r[:group_name] }
+  end
 end
