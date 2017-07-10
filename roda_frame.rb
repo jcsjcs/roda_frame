@@ -164,7 +164,8 @@ class RodaFrame < Roda
       s << [Crossbeams::Layout,
             Crossbeams::Dataminer,
             Crossbeams::LabelDesigner,
-            Crossbeams::RackMiddleware].map { |k| "#{k}: #{k.const_get('VERSION')}" }.join('</li><li>')
+            Crossbeams::RackMiddleware,
+            Roda::DataGrid].map { |k| "#{k}: #{k.const_get('VERSION')}" }.join('</li><li>')
       s << '</li></ul>'
       view(inline: s)
     end
