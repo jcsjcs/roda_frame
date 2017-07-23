@@ -264,7 +264,9 @@ const crossbeamsGridFormatters = {
         prompt: item.prompt,
         method: item.method,
         title: item.title,
+        title_field: item.title_field ? params.data[item.title_field] : item.title ? item.title : '',
         icon: item.icon,
+        popup: item.popup,
       };
     }
   },
@@ -291,7 +293,7 @@ const crossbeamsGridFormatters = {
     // If items are hidden, the last item(s) could be separators.
     // Remove them here.
     items = _.dropRightWhile(items, ['value', '---']);
-    return `<button class='grid-context-menu' data-row='${JSON.stringify(items)}'>list</button>`;
+    return `<button class='grid-context-menu' data-dom-grid-id='${params.context.domGridId}' data-row='${JSON.stringify(items)}'>list</button>`;
   },
 
   // Return a number with thousand separator and at least 2 digits after the decimal.
@@ -775,6 +777,7 @@ Level3PanelCellRenderer.prototype.consumeMouseWheelOnDetailGrid = function consu
         };
       } else {
         gridOptions = {
+          context: { domGridId: gridId },
           columnDefs: null,
           rowDefs: null,
           enableColResize: true,
@@ -797,6 +800,9 @@ Level3PanelCellRenderer.prototype.consumeMouseWheelOnDetailGrid = function consu
         gridOptions.forPrint = true;
         gridOptions.enableStatusBar = false;
       }
+
+      // Index rows by the id column...
+      gridOptions.getRowNodeId = function(data) { return data.id; };
 
       // new agGrid.Grid(grid, gridOptions);
       new agGrid.Grid(grid, gridOptions);
@@ -843,6 +849,7 @@ $(() => {
       // var url_components;
       // var url;
       const row = e.target.dataset.row;
+      const gridId = e.target.dataset.domGridId;
       const items = {};
       JSON.parse(row).forEach((item) => {
         if (item.value && item.value === '---') {
@@ -854,9 +861,12 @@ $(() => {
             prompt: item.prompt,
             method: item.method,
             title: item.title,
+            title_field: item.title_field,
             icon: item.icon,
             is_separator: item.is_separator,
             is_submenu: item.is_submenu,
+            popup: item.popup,
+            domGridId: gridId,
           };
           if (item.is_submenu) {
             items[item.key].items = buildSubMenuItems(item.items);
@@ -869,7 +879,12 @@ $(() => {
           const item = getItemFromTree(key, items);
           const caller = () => {
             if (item.method === undefined) {
-              window.location = item.url;
+              if (item.popup) {
+                crossbeamsLocalStorage.setItem('popupOnGrid', item.domGridId);
+                crossbeamsUtils.jmtPopupDialog(100,100, item.title_field, '', item.url)
+              } else {
+                window.location = item.url;
+              }
             } else {
               document.body.innerHTML += `<form id="dynForm" action="${item.url}" method="post">
                 <input name="_method" type="hidden" value="${item.method}" />
@@ -882,6 +897,7 @@ $(() => {
               prompt: item.prompt,
               okFunc: caller,
               title: item.title,
+              title_field: item.title_field,
             });
           } else {
             caller();

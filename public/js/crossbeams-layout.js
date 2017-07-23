@@ -31,15 +31,19 @@
     }
   });
 
+  function disableButton(button, disabledText) {
+    button.dataset.enableWith = button.value;
+    button.value = disabledText;
+    button.classList.remove('dim');
+    button.classList.add('o-50');
+  }
+
   /**
    * Prevent multiple clicks of submit buttons.
    * @returns {void}
    */
   function preventMultipleSubmits() {
-    this.dataset.enableWith = this.value;
-    this.value = this.dataset.disableWith;
-    this.classList.remove('dim');
-    this.classList.add('o-50');
+    disableButton(this, this.dataset.disableWith);
     window.setTimeout(() => {
       this.disabled = true;
     }, 0); // Disable the button with a delay so the form still submits...
@@ -51,11 +55,25 @@
    * @returns {void}
    */
   function revertDisabledButton(element) {
-    console.log('I got called');
     element.disabled = false;
     element.value = element.dataset.enableWith;
     element.classList.add('dim');
     element.classList.remove('o-50');
+  }
+
+  /**
+   * Prevent multiple clicks of submit buttons.
+   * Re-enables the button after a delay of one second.
+   * @returns {void}
+   */
+  function preventMultipleSubmitsBriefly() {
+    disableButton(this, this.dataset.brieflyDisableWith);
+    window.setTimeout(() => {
+      this.disabled = true;
+      window.setTimeout(() => {
+        revertDisabledButton(this);
+      }, 1000); // Re-enable the button with a delay.
+    }, 0); // Disable the button with a delay so the form still submits...
   }
 
   /**
@@ -76,6 +94,60 @@
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-disable-with]').forEach((element) => {
       element.onclick = preventMultipleSubmits;
+    });
+    document.querySelectorAll('[data-briefly-disable-with]').forEach((element) => {
+      element.onclick = preventMultipleSubmitsBriefly;
+    });
+    document.body.addEventListener('click', function(event) {
+      if (event.target.classList.contains('close-dialog')) {
+         crossbeamsUtils.closeJmtDialog();
+      }
+    });
+    /**
+     * Turn a form into a remote (AJAX) form on submit.
+     */
+    document.body.addEventListener('submit', function(event) {
+      if (event.target.dataset.remote === 'true') {
+        fetch(event.target.action, {
+          method: 'POST', // GET?
+          credentials: 'same-origin',
+          body: new FormData(event.target),
+        }).then(function(response) {
+          return response.json();
+        }).then(function(data) {
+          let closeDialog = true;
+          if (data.redirect) {
+            window.location = data.redirect;
+          } else if (data.updateGridInPlace) {
+            const gridId = crossbeamsLocalStorage.getItem('popupOnGrid');
+            // TODO: move to own function..
+            const gridOptions = crossbeamsGridStore.getGrid(gridId);
+            let rowNode = gridOptions.api.getRowNode(data.updateGridInPlace.id);
+            for (const k in data.updateGridInPlace.changes) {
+                rowNode.setDataValue(k, data.updateGridInPlace.changes[k]);
+            };
+          } else if (data.replaceDialog) {
+            closeDialog = false;
+            $('#dialog-modal').html(data.replaceDialog.content);
+          } else {
+            console.log('Not sure what to do with this:', data);
+          }
+          // Only if not redirect...
+          if (data.flash) {
+            if (data.flash.notice) {
+              Jackbox.success(data.flash.notice);
+            }
+            if (data.flash.error) {
+              Jackbox.error(data.flash.error);
+            }
+          }
+          if (closeDialog) {
+            crossbeamsUtils.closeJmtDialog();
+          }
+        });
+      event.stopPropagation();
+      event.preventDefault();
+      }
     });
   });
 }());
