@@ -8,9 +8,6 @@ gem 'bcrypt'
 gem 'rodauth'
 gem "thin", "~> 1.7"
 gem "awesome_print", "~> 1.7"
-# gem "rom", "~> 3.2"
-# gem "rom-repository", "~> 1.3"
-# gem "rom-sql", "~> 1.2"
 gem 'pg'
 gem 'sequel'
 gem 'sequel_postgresql_triggers'

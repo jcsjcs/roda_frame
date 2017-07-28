@@ -4,7 +4,7 @@ module Security
       class New
         def self.call(id, form_values = nil, form_errors = nil)
 
-          this_repo = ProgramFunctionRepo.new(DB.db)
+          this_repo = ProgramFunctionRepo.new
           rules = { fields: {
             program_id: { renderer: :hidden },
             program_function_name: { },

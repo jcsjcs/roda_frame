@@ -4,8 +4,8 @@ module Security
       class Edit
         def self.call(id, form_values = nil, form_errors = nil)
 
-          this_repo = ProgramFunctionRepo.new(DB.db)
-          obj     = this_repo.program_functions.by_pk(id).one
+          this_repo = ProgramFunctionRepo.new
+          obj     = this_repo.find(id)
           rules = { fields: {
             program_function_name: { },
             group_name: { datalist: this_repo.groups_for(obj.program_id) },

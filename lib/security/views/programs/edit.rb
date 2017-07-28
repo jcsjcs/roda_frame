@@ -4,8 +4,8 @@ module Security
       class Edit
         def self.call(id, form_values = nil, form_errors = nil)
 
-          this_repo = ProgramRepo.new(DB.db)
-          obj     = this_repo.programs.by_pk(id).one
+          this_repo = ProgramRepo.new
+          obj     = this_repo.find(id)
           rules = { fields: {
             program_name: { },
             active: { renderer: :checkbox },

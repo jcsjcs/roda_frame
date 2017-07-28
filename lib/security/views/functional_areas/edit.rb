@@ -4,8 +4,8 @@ module Security
       class Edit
         def self.call(id, form_values = nil, form_errors = nil)
 
-          this_repo = FunctionalAreaRepo.new # (DB.db)
-          obj     = this_repo.find(id) # functional_areas.by_pk(id).one
+          this_repo = FunctionalAreaRepo.new
+          obj     = this_repo.find(id)
           rules = { fields: {
             functional_area_name: { },
             active: { renderer: :checkbox },

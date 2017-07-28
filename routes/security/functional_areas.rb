@@ -12,15 +12,11 @@ class RodaFrame < Roda
         show_page { Security::FunctionalAreas::FunctionalAreas::New.call }
       end
       r.on 'create' do
-        schema = Dry::Validation.Schema do
-          required(:functional_area_name).filled(:str?)
-        end
-        errors = schema.call(params[:functional_area]).messages
+        res = FunctionalAreaSchema.(params[:functional_area])
+        errors = res.messages
         if errors.empty?
-          repo = FunctionalAreaRepo.new(DB.db)
-          # changeset = repo.changeset(params[:functional_area]).map(:add_timestamps)
-          changeset = repo.changeset(NewChangeset).data(params[:functional_area])
-          repo.create(changeset)
+          repo = FunctionalAreaRepo.new
+          repo.create(res)
           flash[:notice] = 'Created'
           redirect_to_last_grid(r)
         else
@@ -29,9 +25,6 @@ class RodaFrame < Roda
         end
       end
       r.on :id do |id|
-        # r.get true do
-        #   'SHOW'
-        # end
         r.on 'edit' do
           # show_page { Security::FunctionalAreas::FunctionalAreas::Edit.call(id) }
           show_partial { Security::FunctionalAreas::FunctionalAreas::Edit.call(id) }
@@ -43,22 +36,6 @@ class RodaFrame < Roda
         # - result
         r.post do
           r.on 'update' do
-          # begin
-          #   response['Content-Type'] = 'application/json'
-          #   res = LabelSchema.(params[:label])
-          #   errors = res.messages
-          #   if errors.empty?
-          #     repo = LabelRepo.new
-          #     repo.update(id, res.to_h)
-          #     update_grid_row(id, changes: { label_name: res[:label_name] },
-          #                         notice: "Updated #{res[:label_name]}")
-          #   else
-          #     content = show_partial { LabelView::Properties.call(id, params[:label], errors) }
-          #     update_dialog_content(content: content, error: 'Validation error')
-          #   end
-          # rescue => e
-          #   handle_json_error(e)
-          # end
             begin
               response['Content-Type'] = 'application/json'
               res = FunctionalAreaSchema.(params[:functional_area])
@@ -81,27 +58,6 @@ class RodaFrame < Roda
             rescue => e
               handle_json_error(e)
             end
-
-
-            # schema = Dry::Validation.Schema do
-            #   required(:functional_area_name).filled(:str?)
-            # end
-            # errors = schema.call(params[:functional_area]).messages
-            #
-            # if errors.empty?
-            #   repo = FunctionalAreaRepo.new(DB.db)
-            #   changeset = repo.changeset(id, params[:functional_area]).map(:touch)
-            #   # repo.update(id, params[:functional_area])
-            #   # changeset = repo.changeset(id, UpdateChangeset).data(params[:functional_area])
-            #   repo.update(id, changeset)
-            #   flash[:notice] = 'Updated'
-            #   redirect_to_last_grid(r)
-            # else
-            #   flash.now[:error] = 'Unable to update functional area'
-            #   show_page { Security::FunctionalAreas::FunctionalAreas::Edit.call(id, params[:functional_area], errors) }
-            # end
-
-            # view(inline: "Func.Area UPDATE<p>#{params[:functional_area].inspect} | #{changeset.to_h.inspect}</p>")
           end
         end
         r.delete do
@@ -109,22 +65,22 @@ class RodaFrame < Roda
           repo.delete(id)
           flash[:notice] = 'Deleted'
           redirect_to_last_grid(r)
-          # view(inline: 'POST via DELETE - Func.Area DELETE')
         end
       end
     end
 
     r.on 'programs' do
       r.on 'create' do
-        schema = Dry::Validation.Schema do
-          required(:program_name).filled(:str?)
-        end
-        errors = schema.call(params[:program]).messages
+        res = ProgramSchema.(params[:program])
+        errors = res.messages
+        # schema = Dry::Validation.Schema do
+        #   required(:program_name).filled(:str?)
+        # end
+        # errors = schema.call(params[:program]).messages
         if errors.empty?
-          repo = ProgramRepo.new(DB.db)
-          # changeset = repo.changeset(params[:functional_area]).map(:add_timestamps)
-          changeset = repo.changeset(NewChangeset).data(params[:program])
-          repo.create(changeset)
+          repo = ProgramRepo.new
+          # changeset = repo.changeset(NewChangeset).data(params[:program])
+          repo.create(res)
           flash[:notice] = 'Created'
           r.redirect '/list/menu_definitions'
         else
@@ -141,15 +97,16 @@ class RodaFrame < Roda
         end
         r.post do
           r.on 'update' do
-            schema = Dry::Validation.Schema do
-              required(:program_name).filled(:str?)
-            end
-            errors = schema.call(params[:program]).messages
+            res = ProgramSchema.(params[:program])
+            errors = res.messages
+            # schema = Dry::Validation.Schema do
+            #   required(:program_name).filled(:str?)
+            # end
+            # errors = schema.call(params[:program]).messages
             if errors.empty?
-              repo = ProgramRepo.new(DB.db)
-              changeset = repo.changeset(id, params[:program]).map(:touch)
-              # changeset = repo.changeset(id, UpdateChangeset).data(params[:functional_area])
-              repo.update(id, changeset)
+              repo = ProgramRepo.new
+              # changeset = repo.changeset(id, params[:program]).map(:touch)
+              repo.update(id, res)
               flash[:notice] = 'Updated'
               redirect_to_last_grid(r)
             else
@@ -159,7 +116,7 @@ class RodaFrame < Roda
           end
         end
         r.delete do
-          repo = ProgramRepo.new(DB.db)
+          repo = ProgramRepo.new
           repo.delete(id)
           flash[:notice] = 'Deleted'
           redirect_to_last_grid(r)
@@ -169,22 +126,24 @@ class RodaFrame < Roda
 
     r.on 'program_functions' do
       r.on 'create' do
-        schema = Dry::Validation.Form do
-          required(:program_function_name).filled(:str?)
-          required(:url).filled(:str?)
-          required(:program_function_sequence).filled(:int?)
-          required(:program_id).filled(:int?) # Hidden parameter
-          required(:group_name).maybe(:str?)
-          required(:restricted_user_access).filled(:bool?)
-          required(:active).filled(:bool?)
-        end
-        result = schema.call(params[:program_function])
-        errors = result.messages
+        res = ProgramFunctionCreateSchema.(params[:program_function])
+        errors = res.messages
+        # schema = Dry::Validation.Form do
+        #   required(:program_function_name).filled(:str?)
+        #   required(:url).filled(:str?)
+        #   required(:program_function_sequence).filled(:int?)
+        #   required(:program_id).filled(:int?) # Hidden parameter
+        #   required(:group_name).maybe(:str?)
+        #   required(:restricted_user_access).filled(:bool?)
+        #   required(:active).filled(:bool?)
+        # end
+        # result = schema.call(params[:program_function])
+        # errors = result.messages
         if errors.empty?
-          repo = ProgramFunctionRepo.new(DB.db)
+          repo = ProgramFunctionRepo.new
           # changeset = repo.changeset(params[:functional_area]).map(:add_timestamps)
-          changeset = repo.changeset(NewChangeset).data(result.to_h) # + hidden params...
-          repo.create(changeset)
+          # changeset = repo.changeset(NewChangeset).data(result.to_h) # + hidden params...
+          repo.create(res)
           flash[:notice] = 'Created'
           r.redirect '/list/menu_definitions'
         else
@@ -203,21 +162,23 @@ class RodaFrame < Roda
         end
         r.post do
           r.on 'update' do
-            schema = Dry::Validation.Form do
-              required(:program_function_name).filled(:str?)
-              required(:url).filled(:str?)
-              required(:program_function_sequence).filled(:int?)
-              required(:group_name).maybe(:str?)
-              required(:restricted_user_access).filled(:bool?)
-              required(:active).filled(:bool?)
-            end
-            result = schema.call(params[:program_function])
-            errors = result.messages
+            res = ProgramFunctionSchema.(params[:program_function])
+            errors = res.messages
+            # schema = Dry::Validation.Form do
+            #   required(:program_function_name).filled(:str?)
+            #   required(:url).filled(:str?)
+            #   required(:program_function_sequence).filled(:int?)
+            #   required(:group_name).maybe(:str?)
+            #   required(:restricted_user_access).filled(:bool?)
+            #   required(:active).filled(:bool?)
+            # end
+            # result = schema.call(params[:program_function])
+            # errors = result.messages
             if errors.empty?
-              repo = ProgramFunctionRepo.new(DB.db)
-              changeset = repo.changeset(id, result.to_h).map(:touch)
+              repo = ProgramFunctionRepo.new
+              # changeset = repo.changeset(id, result.to_h).map(:touch)
               # changeset = repo.changeset(id, UpdateChangeset).data(result.to_h)
-              repo.update(id, changeset)
+              repo.update(id, res)
               flash[:notice] = 'Updated'
               redirect_to_last_grid(r)
             else

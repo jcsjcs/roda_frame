@@ -63,7 +63,15 @@ user_repo.create(usr_hash)
 # Dry validation
 
 * Input from forms must use Form, not Schema
-* Use the resul.to_h hash instead of params to do updating.
+* Use the result.to_h hash instead of params to do updating.
 * Therefore all form inputs **must** be listed - even if they're optional - and expected types given.
 * Use specific data types for validation of numerics (int, float, decimal).
 
+# Move to Sequel
+
+* Set up migrations for existing tables.
+* Apply migration triggers for created/updated dates.
+* Remove all unused code referring to tables used in older experiments.
+* Config for database connection & dev/production environments.
+* Revert DB to a plain Sequel connection (remove .base etc) - effect on roda-grid plugin.
+* Set up Rakefile for migrations.

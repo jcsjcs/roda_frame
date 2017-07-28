@@ -8,14 +8,14 @@
   pf.updated_at AS pf_updated_at\r\n  FROM functional_areas f\r\n LEFT OUTER JOIN
   programs p ON p.functional_area_id = f.id\r\n LEFT OUTER JOIN program_functions
   pf ON pf.program_id = p.id\r\nORDER BY f.functional_area_name, p.program_name, pf.group_name,
-  pf.program_function_sequence"
+  pf.program_function_sequence, pf.program_function_name"
 :limit: 
 :offset: 
 :columns:
   functional_area_id:
     :name: functional_area_id
     :sequence_no: 1
-    :caption: Id
+    :caption: F. Id
     :namespaced_name: f.id
     :data_type: :integer
     :width: 
@@ -30,7 +30,7 @@
   program_id:
     :name: program_id
     :sequence_no: 2
-    :caption: Id
+    :caption: P. Id
     :namespaced_name: p.id
     :data_type: :integer
     :width: 
@@ -45,7 +45,7 @@
   id:
     :name: id
     :sequence_no: 3
-    :caption: Id
+    :caption: PF. Id
     :namespaced_name: pf.id
     :data_type: :integer
     :width: 
@@ -179,7 +179,7 @@
     :group_max: false
   group_name:
     :name: group_name
-    :sequence_no: 12
+    :sequence_no: 4
     :caption: Group name
     :namespaced_name: pf.group_name
     :data_type: :string
@@ -194,7 +194,7 @@
     :group_max: false
   program_function_name:
     :name: program_function_name
-    :sequence_no: 13
+    :sequence_no: 5
     :caption: Program function name
     :namespaced_name: pf.program_function_name
     :data_type: :string
@@ -209,7 +209,7 @@
     :group_max: false
   url:
     :name: url
-    :sequence_no: 14
+    :sequence_no: 6
     :caption: Url
     :namespaced_name: pf.url
     :data_type: :string
@@ -224,7 +224,7 @@
     :group_max: false
   program_function_sequence:
     :name: program_function_sequence
-    :sequence_no: 15
+    :sequence_no: 7
     :caption: Program function sequence
     :namespaced_name: pf.program_function_sequence
     :data_type: :integer
@@ -239,7 +239,7 @@
     :group_max: false
   restricted_user_access:
     :name: restricted_user_access
-    :sequence_no: 16
+    :sequence_no: 8
     :caption: Restricted user access
     :namespaced_name: pf.restricted_user_access
     :data_type: :boolean

@@ -3,8 +3,6 @@ module Security
     module FunctionalAreas
       class New
         def self.call(form_values = nil, form_errors = nil)
-
-          # this_repo = FunctionalAreaRepo.new(DB.db)
           rules = { fields: {
             functional_area_name: { },
             active: { renderer: :checkbox },
