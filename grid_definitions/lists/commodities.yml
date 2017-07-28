@@ -6,3 +6,9 @@
   - :url: /masterfiles/fruit_and_packing/commodities/$:id$
     :text: delete
     :is_delete: true
+row_colour_rules:
+  :field: commodity_group_code
+  :values:
+    - CI: green
+    - PF: '#CCDDEE'
+    - SF: orange

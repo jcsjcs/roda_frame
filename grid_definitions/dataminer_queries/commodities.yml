@@ -1,10 +1,9 @@
 ---
 :caption: Commodities
 :sql: "SELECT commodities.id, commodity_code, commodity_description_short, commodity_description_long,\r\n
-  \      commodity_group_id, commodities.commodity_group_code, commodity_groups.commodity_group_description,\r\n
+  \      commodity_group_id, commodities.commodity_group_code,\r\n
   \      carton_fruit_standard_mass, rebins_default_size, bin_fruit_standard_mass,\r\n
-  \      ps_standard_mass, grower_commitment_required\r\n  FROM commodities\r\n  JOIN
-  commodity_groups ON commodity_groups.id = commodities.commodity_group_id\r\n\r\n"
+  \      ps_standard_mass, grower_commitment_required\r\n  FROM commodities\r\n\r\n"
 :limit: 
 :offset: 
 :columns:
@@ -88,21 +87,6 @@
     :sequence_no: 6
     :caption: Commodity group code
     :namespaced_name: commodities.commodity_group_code
-    :data_type: :string
-    :width: 
-    :format: 
-    :hide: false
-    :groupable: true
-    :group_by_seq: 
-    :group_sum: false
-    :group_avg: false
-    :group_min: false
-    :group_max: false
-  commodity_group_description:
-    :name: commodity_group_description
-    :sequence_no: 7
-    :caption: Commodity group description
-    :namespaced_name: commodity_groups.commodity_group_description
     :data_type: :string
     :width: 
     :format: 
@@ -204,4 +188,4 @@
   :default_value: 
   :ordered_list: 54
   :ui_priority: 1
-  :list_def: SELECT commodity_group_code, id FROM commodity_groups ORDER BY commodity_group_code
+  :list_def: SELECT DISTINCT commodity_group_code, commodity_group_id FROM commodities ORDER BY commodity_group_code
