@@ -3,9 +3,7 @@
 require 'roda'
 require 'rodauth'
 require 'awesome_print'
-require 'rom'
-require 'rom-sql'
-require 'rom-repository'
+require 'sequel'
 require 'crossbeams/layout'
 require 'crossbeams/dataminer'
 require 'crossbeams/dataminer_interface'
@@ -13,24 +11,18 @@ require 'crossbeams/label_designer'
 require 'crossbeams/rack_middleware'
 require 'yaml'
 require 'base64'
+require 'dry-struct'
 require 'dry-validation'
-#require 'pry'
+#require 'pry' # TODO: Put this in based on dev env.
 
-Dir['./helpers/**/*.rb'].each { |f| require f }
-# Dir['./persistence/**/*.rb'].each { |f| require f }
-# Dir['./persistence/**/*.rb'].each { |f| puts f }
-require './repositories/user_repo'
-require './repositories/commodity_repo'
-require './repositories/functional_area_repo'
-require './repositories/program_repo'
-require './repositories/program_function_repo'
-# require './repositories/supplier_invoice_repo'
-# require './repositories/payment_term_repo'
-require './repositories/warehouse/book_repo' # pretend warehouse repo.
+module Types
+  include Dry::Types.module
+end
+
 require './lib/db_connections'
-Dir['./persistence/changesets/*.rb'].each { |f| require f }
-# require './models'
-
+require './lib/repo_base'
+Dir['./helpers/**/*.rb'].each { |f| require f }
+Dir['./lib/applets/*.rb'].each { |f| require f }
 
 DB = DBConnections.new
 # DB.base.use_logger(Logger.new($stdout)) # This will log SQL to console.
@@ -47,7 +39,6 @@ class RodaFrame < Roda
   use Rack::Session::Cookie, secret: "some_nice_long_random_string_DSKJH4378EYR7EGKUFH", key: "_myapp_session"
   use Rack::MethodOverride # USe with all_verbs plugin to allow "r.delete" etc.
   use Crossbeams::RackMiddleware::Banner, template: 'views/_page_banner.erb'#, session: request.session
-  # use Crossbeams::DataminerInterface::App, url_prefix: 'dataminer/', dm_reports_location: '/home/james/ra/roda_frame/reports',
   use Crossbeams::DataminerInterface::App, url_prefix: 'dataminer/',
     dm_reports_location: File.join(File.dirname(__FILE__), 'reports'),
     dm_js_location: 'js', dm_css_location: 'css', db_connection: DB.base
@@ -72,7 +63,7 @@ class RodaFrame < Roda
   plugin :flash
   plugin :csrf, raise: true # , :skip => ['POST:/report_error'] # FIXME: Remove the +raise+ param when going live!
     plugin :rodauth do
-      db DB.base.connection
+      db DB.base # .connection
       enable :login, :logout#, :change_password
       logout_route 'a_dummy_route' # Override 'logout' route so that we have control over it.
       # logout_notice_flash 'Logged out'

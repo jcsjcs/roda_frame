@@ -7,6 +7,12 @@ module CommonHelpers
     view('crossbeams_layout_page')
   end
 
+  def show_partial(&block)
+    @layout = block.yield
+    @layout.add_csrf_tag(csrf_tag)
+    @layout.render
+  end
+
   def make_options(ar)
     ar.map do |a|
       if a.kind_of?(Array)
@@ -19,13 +25,13 @@ module CommonHelpers
 
   def current_user
     return nil unless session[:user_id]
-    @current_user ||= UserRepo.new(DB.db).users.by_pk(session[:user_id]).one
+    @current_user ||= UserRepo.new.find(session[:user_id]) # (DB.db).users.by_pk(session[:user_id]).one
   end
 
   def authorised?(programs, sought_permission)
     return true # JUST FOR TESTING....
     return false unless current_user
-    prog_repo = ProgramRepo.new(DB.db)
+    prog_repo = ProgramRepo.new #(DB.db)
     prog_repo.authorise?(current_user, Array(programs), sought_permission)
   end
 
@@ -40,4 +46,29 @@ module CommonHelpers
     r.redirect session[:last_grid_url]
   end
 
+  def redirect_via_json_to_last_grid
+    redirect_via_json(session[:last_grid_url])
+  end
+
+  def redirect_via_json(url)
+    { redirect: url }.to_json
+  end
+
+  def update_grid_row(id, changes:, notice: nil)
+    res = {updateGridInPlace: { id: id.to_i, changes: changes } }
+    res[:flash] = { notice: notice } if notice
+    res.to_json
+  end
+
+  def update_dialog_content(content:, notice: nil, error: nil)
+    res = { replaceDialog: { content: content } }
+    res[:flash] = { notice: notice } if notice
+    res[:flash] = { error: error } if error
+    res.to_json
+  end
+
+  def handle_json_error(err)
+    response.status = 500
+    { exception: err.class.name, flash: { error: "An error occurred: #{err.message}" } }.to_json
+  end
 end

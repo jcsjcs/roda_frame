@@ -1,7 +1,8 @@
-require 'rom-repository'
-
-class ProgramFunctionRepo < ROM::Repository[:program_functions]
-  commands :create, update: :by_pk, delete: :by_pk
+class ProgramFunctionRepo < RepoBase
+  def initialize
+    set_main_table :program_functions
+    set_wrapper ProgramFunction
+  end
 
   def menu_for_user(user)
     query = <<-EOQ

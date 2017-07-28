@@ -33,7 +33,8 @@ class RodaFrame < Roda
         #   'SHOW'
         # end
         r.on 'edit' do
-          show_page { Security::FunctionalAreas::FunctionalAreas::Edit.call(id) }
+          # show_page { Security::FunctionalAreas::FunctionalAreas::Edit.call(id) }
+          show_partial { Security::FunctionalAreas::FunctionalAreas::Edit.call(id) }
         end
         # define a routes result object:
         # - success?
@@ -42,23 +43,63 @@ class RodaFrame < Roda
         # - result
         r.post do
           r.on 'update' do
-            schema = Dry::Validation.Schema do
-              required(:functional_area_name).filled(:str?)
+          # begin
+          #   response['Content-Type'] = 'application/json'
+          #   res = LabelSchema.(params[:label])
+          #   errors = res.messages
+          #   if errors.empty?
+          #     repo = LabelRepo.new
+          #     repo.update(id, res.to_h)
+          #     update_grid_row(id, changes: { label_name: res[:label_name] },
+          #                         notice: "Updated #{res[:label_name]}")
+          #   else
+          #     content = show_partial { LabelView::Properties.call(id, params[:label], errors) }
+          #     update_dialog_content(content: content, error: 'Validation error')
+          #   end
+          # rescue => e
+          #   handle_json_error(e)
+          # end
+            begin
+              response['Content-Type'] = 'application/json'
+              res = FunctionalAreaSchema.(params[:functional_area])
+              errors = res.messages
+              if errors.empty?
+                repo = FunctionalAreaRepo.new
+                repo.update(id, res)
+                flash[:notice] = 'Updated'
+								redirect_via_json_to_last_grid
+                # flash[:notice] = 'Updated'
+                # redirect_to_last_grid(r)
+                # update_grid_row(id, changes: res.to_h,
+                #                     notice: "Updated #{res[:functional_area_name]}")
+              else
+                # flash.now[:error] = 'Unable to update functional area'
+                # show_page { Security::FunctionalAreas::FunctionalAreas::Edit.call(id, params[:functional_area], errors) }
+                content = show_partial { Security::FunctionalAreas::FunctionalAreas::Edit.call(id, params[:functional_area], errors) }
+                update_dialog_content(content: content, error: 'Validation error')
+              end
+            rescue => e
+              handle_json_error(e)
             end
-            errors = schema.call(params[:functional_area]).messages
 
-            if errors.empty?
-              repo = FunctionalAreaRepo.new(DB.db)
-              changeset = repo.changeset(id, params[:functional_area]).map(:touch)
-              # repo.update(id, params[:functional_area])
-              # changeset = repo.changeset(id, UpdateChangeset).data(params[:functional_area])
-              repo.update(id, changeset)
-              flash[:notice] = 'Updated'
-              redirect_to_last_grid(r)
-            else
-              flash.now[:error] = 'Unable to update functional area'
-              show_page { Security::FunctionalAreas::FunctionalAreas::Edit.call(id, params[:functional_area], errors) }
-            end
+
+            # schema = Dry::Validation.Schema do
+            #   required(:functional_area_name).filled(:str?)
+            # end
+            # errors = schema.call(params[:functional_area]).messages
+            #
+            # if errors.empty?
+            #   repo = FunctionalAreaRepo.new(DB.db)
+            #   changeset = repo.changeset(id, params[:functional_area]).map(:touch)
+            #   # repo.update(id, params[:functional_area])
+            #   # changeset = repo.changeset(id, UpdateChangeset).data(params[:functional_area])
+            #   repo.update(id, changeset)
+            #   flash[:notice] = 'Updated'
+            #   redirect_to_last_grid(r)
+            # else
+            #   flash.now[:error] = 'Unable to update functional area'
+            #   show_page { Security::FunctionalAreas::FunctionalAreas::Edit.call(id, params[:functional_area], errors) }
+            # end
 
             # view(inline: "Func.Area UPDATE<p>#{params[:functional_area].inspect} | #{changeset.to_h.inspect}</p>")
           end

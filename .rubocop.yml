@@ -17,3 +17,12 @@ MethodLength:
 
 Style/ExtraSpacing:
   Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - 'Rakefile'
+    - '**/*.rake'
+    - 'spec/**/*.rb'
+
+Layout/SpaceAroundOperators:
+  AllowForAlignment: true

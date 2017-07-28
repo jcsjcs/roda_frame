@@ -4,8 +4,8 @@ module Security
       class Edit
         def self.call(id, form_values = nil, form_errors = nil)
 
-          this_repo = FunctionalAreaRepo.new(DB.db)
-          obj     = this_repo.functional_areas.by_pk(id).one
+          this_repo = FunctionalAreaRepo.new # (DB.db)
+          obj     = this_repo.find(id) # functional_areas.by_pk(id).one
           rules = { fields: {
             functional_area_name: { },
             active: { renderer: :checkbox },
@@ -17,6 +17,7 @@ module Security
             page.form_errors form_errors
             page.form do |form|
               form.action "/security/functional_areas/functional_areas/#{id}/update"
+              form.remote!
               form.add_field :functional_area_name
               form.add_field :active
             end
