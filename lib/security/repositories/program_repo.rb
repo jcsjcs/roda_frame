@@ -18,4 +18,22 @@ class ProgramRepo < RepoBase
     EOQ
     !DB.base[query].first.nil?
   end
+
+  def program_functions_for_select(id)
+    query = <<-EOQ
+    SELECT id, program_function_name
+    FROM program_functions
+    WHERE program_id = #{id}
+    ORDER BY program_function_sequence
+    EOQ
+    DB.base[query].map { |rec| [rec[:program_function_name], rec[:id]] }
+  end
+
+  def re_order_program_functions(sorted_ids)
+    upd = []
+    sorted_ids.split(',').each_with_index do |id, index|
+      upd << "UPDATE program_functions SET program_function_sequence = #{index+1} WHERE id = #{id};"
+    end
+    DB.base[upd.join].update
+  end
 end

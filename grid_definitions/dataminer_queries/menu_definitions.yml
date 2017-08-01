@@ -1,7 +1,7 @@
 ---
 :caption: Menu definitions
 :sql: "SELECT \r\nf.id AS functional_area_id, p.id AS program_id, pf.id, f.functional_area_name,
-  f.active AS f_active, f.created_at AS f_created_at, f.updated_at AS f_updated_at,\r\np.program_name,
+  f.active AS f_active, f.created_at AS f_created_at, f.updated_at AS f_updated_at,\r\nCOALESCE(p.program_name, '') AS program_name,
   p.active AS p_active, p.created_at AS p_created_at, p.updated_at AS p_updated_at,
   -- p.functional_area_id\r\npf.group_name, pf.program_function_name, pf.url, pf.program_function_sequence,
   \r\n       pf.restricted_user_access, pf.active AS pf_active, pf.created_at AS pf_created_at,
@@ -59,7 +59,7 @@
     :group_max: false
   functional_area_name:
     :name: functional_area_name
-    :sequence_no: 4
+    :sequence_no: 10
     :caption: Functional area name
     :namespaced_name: f.functional_area_name
     :data_type: :string
@@ -74,7 +74,7 @@
     :group_max: false
   f_active:
     :name: f_active
-    :sequence_no: 5
+    :sequence_no: 11
     :caption: Active
     :namespaced_name: f.active
     :data_type: :boolean
@@ -89,7 +89,7 @@
     :group_max: false
   f_created_at:
     :name: f_created_at
-    :sequence_no: 6
+    :sequence_no: 12
     :caption: Created at
     :namespaced_name: f.created_at
     :data_type: :datetime
@@ -104,7 +104,7 @@
     :group_max: false
   f_updated_at:
     :name: f_updated_at
-    :sequence_no: 7
+    :sequence_no: 13
     :caption: Updated at
     :namespaced_name: f.updated_at
     :data_type: :datetime
@@ -119,7 +119,7 @@
     :group_max: false
   program_name:
     :name: program_name
-    :sequence_no: 8
+    :sequence_no: 14
     :caption: Program name
     :namespaced_name: p.program_name
     :data_type: :string
@@ -134,7 +134,7 @@
     :group_max: false
   p_active:
     :name: p_active
-    :sequence_no: 9
+    :sequence_no: 15
     :caption: Active
     :namespaced_name: p.active
     :data_type: :boolean
@@ -149,7 +149,7 @@
     :group_max: false
   p_created_at:
     :name: p_created_at
-    :sequence_no: 10
+    :sequence_no: 16
     :caption: Created at
     :namespaced_name: p.created_at
     :data_type: :datetime
@@ -164,7 +164,7 @@
     :group_max: false
   p_updated_at:
     :name: p_updated_at
-    :sequence_no: 11
+    :sequence_no: 17
     :caption: Updated at
     :namespaced_name: p.updated_at
     :data_type: :datetime
@@ -254,7 +254,7 @@
     :group_max: false
   pf_active:
     :name: pf_active
-    :sequence_no: 17
+    :sequence_no: 9
     :caption: Active
     :namespaced_name: pf.active
     :data_type: :boolean

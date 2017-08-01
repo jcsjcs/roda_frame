@@ -7,6 +7,7 @@ PATH
       crossbeams-layout
       roda (~> 2.25)
       rouge
+      tilt
 
 PATH
   remote: /home/james/ra/crossbeams/crossbeams-dataminer

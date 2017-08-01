@@ -44,7 +44,7 @@ class RodaFrame < Roda
                 repo = FunctionalAreaRepo.new
                 repo.update(id, res)
                 flash[:notice] = 'Updated'
-								redirect_via_json_to_last_grid
+                redirect_via_json_to_last_grid
                 # flash[:notice] = 'Updated'
                 # redirect_to_last_grid(r)
                 # update_grid_row(id, changes: res.to_h,
@@ -114,12 +114,23 @@ class RodaFrame < Roda
               show_page { Security::FunctionalAreas::Programs::Edit.call(id, params[:program], errors) }
             end
           end
+          r.on 'save_reorder' do
+            repo = ProgramRepo.new
+            # FIXME:... Should this be in the repo? or in objects sent to the repo to update?
+            repo.re_order_program_functions(params[:pf_sorted_ids])
+            flash[:notice] = 'Re-ordered'
+            redirect_via_json_to_last_grid
+          end
         end
         r.delete do
           repo = ProgramRepo.new
           repo.delete(id)
           flash[:notice] = 'Deleted'
           redirect_to_last_grid(r)
+        end
+
+        r.on 'reorder' do
+          show_partial { Security::FunctionalAreas::Programs::Reorder.call(id) }
         end
       end
     end
