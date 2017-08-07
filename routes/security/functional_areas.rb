@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Dir['./lib/security/functional_areas/**/*.rb'].each { |f| require f }
 Dir['./lib/security/programs/**/*.rb'].each { |f| require f }
 Dir['./lib/security/program_functions/**/*.rb'].each { |f| require f }

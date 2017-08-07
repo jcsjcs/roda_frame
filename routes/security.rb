@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Dir['./routes/security/*.rb'].each { |f| require f }
 
 class RodaFrame < Roda

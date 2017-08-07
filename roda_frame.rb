@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # TODO: Get rubocop in from the start....
 
 require 'roda'
@@ -151,7 +153,7 @@ class RodaFrame < Roda
     end
 
     r.is 'versions' do
-      s = '<h2>Gem Versions</h2><ul><li>'
+      s = String.new('<h2>Gem Versions</h2><ul><li>')
       s << [Crossbeams::Layout,
             Crossbeams::Dataminer,
             Crossbeams::LabelDesigner,
